@@ -1,12 +1,19 @@
 <?php
 
+require_once(__DIR__ . '/lib/readEnv.php');
+
 class GetHazard
 {
     const MAX_LON = 153.986667;
     const MIN_LON = 122.9325;
     const MAX_LAT = 45.557228;
     const MIN_LAT = 20.425246;
-    private string $apiKey = 'AIzaSyA1lyYKyu8er-z6plzMfHCqvb-J0MGmSL8';
+    private string $apiKey;
+
+    public function __construct()
+    {
+        $this->apiKey = readEnv()[5];
+    }
 
     public function getApiKey(): string
     {

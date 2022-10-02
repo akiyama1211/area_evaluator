@@ -1,13 +1,16 @@
 <?php
 // パラメータ
+require_once __DIR__ . '/lib/readEnv.php';
+
 class AnalyzeFinance
 {
     const STATISTICS_ID = '0000020204';
-    private string $appId = '7ff3aeb17777c6ad3db24610e68bcaf3456f42f7';
+    private string $appId;
     private array $metaData;
 
     public function __construct(private string $area)
     {
+        $this->appId = readEnv()[4];
         $this->metaData = $this->getMetaData();
     }
 

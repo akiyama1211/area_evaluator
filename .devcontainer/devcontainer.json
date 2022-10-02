@@ -1,5 +1,5 @@
 {
-  "name": "Part8",
+  "name": "AreaEvaluator",
   "dockerComposeFile": [
     "../docker-compose.yml",
   ],
