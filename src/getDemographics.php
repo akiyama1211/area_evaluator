@@ -36,22 +36,20 @@ class GetDemographics
         // Json形式を配列に変換
         $metaData = json_decode($json, true);
         return $metaData;
-
     }
 
-    public function getTime(): string
+    public function getTime(): array
     {
         // 時間データを取得
         $timeKeys = array_keys($this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][3]['CLASS']);
 
-        $maxTimeKey = array_keys($timeKeys, max($timeKeys))[0];
+        $fiveYearsKey = array_slice($timeKeys, count($timeKeys) - 3);
 
-        unset($timeKeys[$maxTimeKey]);
-
-        $secondaryTimeKey = max($timeKeys);
-
-        $timeCode = $this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][3]['CLASS'][$secondaryTimeKey]['@code'];
-        return $timeCode;
+        $timeCodes = [];
+        foreach ($fiveYearsKey as $yearKey) {
+            $timeCodes[] = $this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][3]['CLASS'][$yearKey]['@code'];
+        }
+        return $timeCodes;
     }
 
     public function getArea(): string
@@ -61,65 +59,65 @@ class GetDemographics
 
         $areaKey = array_search($this->area, array_column($areaMetaData, '@name'));
 
+        if (!$areaKey) {
+            echo '該当地域が存在しないため、処理を終了します。' . PHP_EOL;
+            exit;
+        }
+
         $areaCode = $this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][2]['CLASS'][$areaKey]['@code'];
         return $areaCode;
     }
 
-    // $this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][2]['CLASS'][670]['@name'] === '東京都 世田谷区'
-
-    // $this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][2]['CLASS'][670]['@code'] === '13112'
-
-    // $this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][3]['CLASS'][40]['@code'] === '2019100000'
-
-    // $this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][3]['CLASS'][40]['@name'] === '2019年度'
-
     public function getStatisticData(): array
     {
         $categories = [
-            'D2203',
-            'D2211',
-            'D2212',
-            'D2214',
-            'D2215'
+            'A4101',
+            'A4200',
+            'A5103',
+            'A5104'
         ];
-        $timeCode = $this->getTime();
+        // 'A4101'出生数,
+        // 'A4200',死亡数
+        // 'A5103',転入者数
+        // 'A5104',転出者数
+
+        $timeCodes = $this->getTime();
         $areaCode = $this->getArea();
 
         // URLエンコード
         $statisticData = [];
-        foreach ($categories as $category) {
-            $params = array(
-                'appId' => $this->appId,
-                'statsDataId' => self::STATISTICS_ID,
-                'cdTime' => $timeCode,
-                'cdArea' => $areaCode,
-                'cdCat01' => $category
-            );
-            $query = http_build_query($params, '', '&', PHP_QUERY_RFC3986);
-            // 統計データを取得
-            $url = 'http://api.e-stat.go.jp/rest/2.0/app/json/getStatsData?' . $query;
-            $json = file_get_contents($url);
+        foreach ($timeCodes as $timeCode) {
+            foreach ($categories as $category) {
+                $params = array(
+                    'appId' => $this->appId,
+                    'statsDataId' => self::STATISTICS_ID,
+                    'cdTime' => $timeCode,
+                    'cdArea' => $areaCode,
+                    'cdCat01' => $category
+                );
+                $query = http_build_query($params, '', '&', PHP_QUERY_RFC3986);
+                // 統計データを取得
+                $url = 'http://api.e-stat.go.jp/rest/2.0/app/json/getStatsData?' . $query;
+                $json = file_get_contents($url);
 
-            $arr = json_decode($json, true);
-            $name = $arr['GET_STATS_DATA']['STATISTICAL_DATA']['CLASS_INF']['CLASS_OBJ'][1]['CLASS']['@name'];
-            $categoryName = explode('（', explode('_', $name)[1])[0];
-            $value = $arr['GET_STATS_DATA']['STATISTICAL_DATA']['DATA_INF']['VALUE']['$'];
-            $unit = $arr['GET_STATS_DATA']['STATISTICAL_DATA']['DATA_INF']['VALUE']['@unit'];
-            $statisticData[$categoryName] = $value . $unit;
+                $arr = json_decode($json, true);
+                $year = substr($timeCode, 0, 4);
+                $name = $arr['GET_STATS_DATA']['STATISTICAL_DATA']['CLASS_INF']['CLASS_OBJ'][1]['CLASS']['@name'];
+                $categoryName = explode('_', $name)[1];
+                $value = $arr['GET_STATS_DATA']['STATISTICAL_DATA']['DATA_INF']['VALUE']['$'];
+                $unit = $arr['GET_STATS_DATA']['STATISTICAL_DATA']['DATA_INF']['VALUE']['@unit'];
+                $statisticData[(int)$year][$categoryName] = $value . $unit;
+            }
         }
         return $statisticData;
-        // cdCat01='D2203'_経常収支比率
-        // cdCat01='D2211'_実質公債費比率
-        // cdCat01='D2212'_将来負担比率
-        // cdCat01='D2214'_実質赤字比率
-        // cdCat01='D2215'_連結実質赤字比率
     }
 
     public function infoResult()
     {
         $statisticData = $this->getStatisticData();
-        foreach ($statisticData as $categoryName => $index) {
-            echo $categoryName . 'は' . $index . 'です。' . PHP_EOL;
+        foreach ($statisticData as $year => $value) {
+            foreach ($value as $categoryName => $index)
+            echo $year . '年の' . $categoryName . 'は' . $index . 'です。' . PHP_EOL;
         }
     }
 }
