@@ -1,41 +1,16 @@
 <?php
 // パラメータ
+require_once __DIR__ . '/getStatistics.php';
 require_once __DIR__ . '/lib/readEnv.php';
 
-class GetDemographics
+class GetDemographics extends GetStatistics
 {
     const STATISTICS_ID = '0000020201';
-    private string $appId;
-    private array $metaData;
 
-    public function __construct(private string $area)
+    public function __construct($area)
     {
-        $this->appId = readEnv()[4];
-        $this->metaData = $this->getMetaData();
-    }
-
-    public function getAppId(): string
-    {
-        return $this->appId;
-    }
-
-    public function getMetaData(): array
-    {
-        $params = array(
-            'appId' => $this->appId,
-            'statsDataId' => self::STATISTICS_ID,
-        );
-
-        // URLエンコード
-        $query = http_build_query($params, '', '&', PHP_QUERY_RFC3986);
-
-        // 統計表のメタ情報を取得（Json形式）
-        $url = 'http://api.e-stat.go.jp/rest/2.0/app/json/getMetaInfo?' . $query;
-        $json = file_get_contents($url);
-
-        // Json形式を配列に変換
-        $metaData = json_decode($json, true);
-        return $metaData;
+        $this->statisticsId = self::STATISTICS_ID;
+        parent::__construct($area);
     }
 
     public function getTime(): array
@@ -50,22 +25,6 @@ class GetDemographics
             $timeCodes[] = $this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][3]['CLASS'][$yearKey]['@code'];
         }
         return $timeCodes;
-    }
-
-    public function getArea(): string
-    {
-        // エリアデータを取得
-        $areaMetaData = $this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][2]['CLASS'];
-
-        $areaKey = array_search($this->area, array_column($areaMetaData, '@name'));
-
-        if (!$areaKey) {
-            echo '該当地域が存在しないため、処理を終了します。' . PHP_EOL;
-            exit;
-        }
-
-        $areaCode = $this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][2]['CLASS'][$areaKey]['@code'];
-        return $areaCode;
     }
 
     public function getStatisticData(): array
@@ -112,7 +71,7 @@ class GetDemographics
         return $statisticData;
     }
 
-    public function infoResult()
+    public function infoResult(): void
     {
         $statisticData = $this->getStatisticData();
         foreach ($statisticData as $year => $value) {
@@ -121,3 +80,7 @@ class GetDemographics
         }
     }
 }
+
+
+$a = new GetDemographics('千葉県 佐倉市');
+$a->infoResult();

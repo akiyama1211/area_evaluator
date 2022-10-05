@@ -1,42 +1,16 @@
 <?php
 // パラメータ
+require_once __DIR__ . '/getStatistics.php';
 require_once __DIR__ . '/lib/readEnv.php';
 
-class AnalyzeFinance
+class AnalyzeFinance extends GetStatistics
 {
     const STATISTICS_ID = '0000020204';
-    private string $appId;
-    private array $metaData;
 
-    public function __construct(private string $area)
+    public function __construct($area)
     {
-        $this->appId = readEnv()[4];
-        $this->metaData = $this->getMetaData();
-    }
-
-    public function getAppId(): string
-    {
-        return $this->appId;
-    }
-
-    public function getMetaData(): array
-    {
-        $params = array(
-            'appId' => $this->appId,
-            'statsDataId' => self::STATISTICS_ID,
-        );
-
-        // URLエンコード
-        $query = http_build_query($params, '', '&', PHP_QUERY_RFC3986);
-
-        // 統計表のメタ情報を取得（Json形式）
-        $url = 'http://api.e-stat.go.jp/rest/2.0/app/json/getMetaInfo?' . $query;
-        $json = file_get_contents($url);
-
-        // Json形式を配列に変換
-        $metaData = json_decode($json, true);
-        return $metaData;
-
+        $this->statisticsId = self::STATISTICS_ID;
+        parent::__construct($area);
     }
 
     public function getTime(): string
@@ -54,25 +28,6 @@ class AnalyzeFinance
         return $timeCode;
     }
 
-    public function getArea(): string
-    {
-        // エリアデータを取得
-        $areaMetaData = $this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][2]['CLASS'];
-
-        $areaKey = array_search($this->area, array_column($areaMetaData, '@name'));
-
-        $areaCode = $this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][2]['CLASS'][$areaKey]['@code'];
-        return $areaCode;
-    }
-
-    // $this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][2]['CLASS'][670]['@name'] === '東京都 世田谷区'
-
-    // $this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][2]['CLASS'][670]['@code'] === '13112'
-
-    // $this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][3]['CLASS'][40]['@code'] === '2019100000'
-
-    // $this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][3]['CLASS'][40]['@name'] === '2019年度'
-
     public function getStatisticData(): array
     {
         $categories = [
@@ -82,6 +37,12 @@ class AnalyzeFinance
             'D2214',
             'D2215'
         ];
+        // cdCat01='D2203'_経常収支比率
+        // cdCat01='D2211'_実質公債費比率
+        // cdCat01='D2212'_将来負担比率
+        // cdCat01='D2214'_実質赤字比率
+        // cdCat01='D2215'_連結実質赤字比率
+
         $timeCode = $this->getTime();
         $areaCode = $this->getArea();
 
@@ -108,14 +69,9 @@ class AnalyzeFinance
             $statisticData[$categoryName] = $value . $unit;
         }
         return $statisticData;
-        // cdCat01='D2203'_経常収支比率
-        // cdCat01='D2211'_実質公債費比率
-        // cdCat01='D2212'_将来負担比率
-        // cdCat01='D2214'_実質赤字比率
-        // cdCat01='D2215'_連結実質赤字比率
     }
 
-    public function infoResult()
+    public function infoResult(): void
     {
         $statisticData = $this->getStatisticData();
         foreach ($statisticData as $categoryName => $index) {
