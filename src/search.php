@@ -30,15 +30,14 @@ if (!$street) {
 if (count($errors) === 0) {
     $time_start = microtime(true);
 
-    $getHazard = new GetHazard();
-    $getHazard->infoResult($prefectures, $municipalities, $street, $extendAddress);
-
+    // $getHazard = new GetHazard();
+    // $getHazard->infoResult($prefectures, $municipalities, $street, $extendAddress);
     $analyzeFinance = new AnalyzeFinance($prefectures . ' ' . $municipalities);
     $analyzeFinance->infoResult();
-    $getDemographics = new GetDemographics($prefectures . ' ' . $municipalities);
-    $getDemographics->infoResult();
-    $getHospital = new GetHospital($prefectures . ' ' . $municipalities);
-    $getHospital->infoResult();
+    // $getDemographics = new GetDemographics($prefectures . ' ' . $municipalities);
+    // $getDemographics->infoResult();
+    // $getHospital = new GetHospital($prefectures . ' ' . $municipalities);
+    // $getHospital->infoResult();
 
     $time = microtime(true) - $time_start;
     echo "{$time} 秒";
