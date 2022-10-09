@@ -2,6 +2,8 @@
 
 require_once(__DIR__ . '/getHazard.php');
 require_once(__DIR__ . '/analyzeFinance.php');
+require_once(__DIR__ . '/getHospital.php');
+require_once(__DIR__ . '/getDemographics.php');
 
 $prefectures = htmlspecialchars($_POST['prefectures'], ENT_QUOTES, 'UTF-8');
 $municipalities = htmlspecialchars($_POST['municipalities'], ENT_QUOTES, 'UTF-8');
@@ -26,11 +28,20 @@ if (!$street) {
 //     $errors['extendAddress'] = '番地を入力してください。';
 // }
 if (count($errors) === 0) {
-    // $getHazard = new GetHazard();
-    // $getHazard->infoResult($prefectures, $municipalities, $street, $extendAddress);
+    $time_start = microtime(true);
+
+    $getHazard = new GetHazard();
+    $getHazard->infoResult($prefectures, $municipalities, $street, $extendAddress);
 
     $analyzeFinance = new AnalyzeFinance($prefectures . ' ' . $municipalities);
     $analyzeFinance->infoResult();
+    $getDemographics = new GetDemographics($prefectures . ' ' . $municipalities);
+    $getDemographics->infoResult();
+    $getHospital = new GetHospital($prefectures . ' ' . $municipalities);
+    $getHospital->infoResult();
+
+    $time = microtime(true) - $time_start;
+    echo "{$time} 秒";
 } else {
     header('Location: home.php');
 }
