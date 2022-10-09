@@ -51,7 +51,7 @@ class AnalyzeFinance extends GetStatistics
         foreach ($categories as $category) {
             $params = array(
                 'appId' => $this->appId,
-                'statsDataId' => self::STATISTICS_ID,
+                'statsDataId' => $this->statisticsId,
                 'cdTime' => $timeCode,
                 'cdArea' => $areaCode,
                 'cdCat01' => $category
