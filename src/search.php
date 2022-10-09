@@ -34,10 +34,10 @@ if (count($errors) === 0) {
     // $getHazard->infoResult($prefectures, $municipalities, $street, $extendAddress);
     $analyzeFinance = new AnalyzeFinance($prefectures . ' ' . $municipalities);
     $analyzeFinance->infoResult();
-    // $getDemographics = new GetDemographics($prefectures . ' ' . $municipalities);
-    // $getDemographics->infoResult();
-    // $getHospital = new GetHospital($prefectures . ' ' . $municipalities);
-    // $getHospital->infoResult();
+    $getDemographics = new GetDemographics($prefectures . ' ' . $municipalities);
+    $getDemographics->infoResult();
+    $getHospital = new GetHospital($prefectures . ' ' . $municipalities);
+    $getHospital->infoResult();
 
     $time = microtime(true) - $time_start;
     echo "{$time} 秒";

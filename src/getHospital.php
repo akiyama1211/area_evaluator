@@ -14,56 +14,29 @@ class GetHospital extends GetStatistics
         parent::__construct($area);
     }
 
-    public function getTime(): string
-    {
-        // 時間データを取得
-        $timeKeys = array_keys($this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][3]['CLASS']);
-
-        $maxTimeKey = $timeKeys[count($timeKeys) - 1];
-        $timeCode = $this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][3]['CLASS'][$maxTimeKey]['@code'];
-        return $timeCode;
-    }
-
     public function getStatisticData(): array
     {
         $categories = [
             '#I0950102',
             '#I0950103'
         ];
-
         #I0950102_一般病院数（可住地面積100km2当たり）
-#I0950103_一般診療所数（可住地面積100km2当たり）
+        #I0950103_一般診療所数（可住地面積100km2当たり）
 
-$timeCode = $this->getTime();
+        $timeCode = $this->timeCode;
         $areaCode = $this->getArea();
-
-        // URLエンコード
         $statisticData = [];
-        foreach ($categories as $category) {
-            $params = array(
-                'appId' => $this->appId,
-                'statsDataId' => $this->statisticsId,
-                'cdTime' => $timeCode,
-                'cdArea' => $areaCode,
-                'cdCat01' => $category
-            );
-            $query = http_build_query($params, '', '&', PHP_QUERY_RFC3986);
-            // 統計データを取得
-            $url = 'http://api.e-stat.go.jp/rest/2.0/app/json/getStatsData?' . $query;
-            $json = file_get_contents($url);
 
-            $arr = json_decode($json, true);
-            $name = $arr['GET_STATS_DATA']['STATISTICAL_DATA']['CLASS_INF']['CLASS_OBJ'][1]['CLASS']['@name'];
-            $categoryName = explode('_', $name)[1];
-            $value = $arr['GET_STATS_DATA']['STATISTICAL_DATA']['DATA_INF']['VALUE']['$'];
-            $unit = $arr['GET_STATS_DATA']['STATISTICAL_DATA']['DATA_INF']['VALUE']['@unit'];
-            $lastYear = (int)substr($timeCode, 0, 4);
-            $statisticData[$lastYear][$categoryName]['area'] = $value . $unit;
+        foreach ($categories as $category) {
+            $info = $this->getInfo($this->appId, $this->statisticsId, $timeCode, $areaCode, $category);
+
+            $statisticData[$info['year']][$info['name']]
+            ['area'] = $info['value'] . $info['unit'];
 
             $sql = "SELECT average, median FROM hospital WHERE category_id = '{$category}'";
             $recordValue = getData($sql);
-            $statisticData[$lastYear][$categoryName]['average'] = $recordValue[0]['average'] . $unit;
-            $statisticData[$lastYear][$categoryName]['median'] = $recordValue[0]['median'] . $unit;
+            $statisticData[$info['year']][$info['name']]['average'] = $recordValue[0]['average'] . $info['unit'];
+            $statisticData[$info['year']][$info['name']]['median'] = $recordValue[0]['median'] . $info['unit'];
         }
         return $statisticData;
     }
