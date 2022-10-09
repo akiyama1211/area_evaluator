@@ -4,10 +4,10 @@ require_once(__DIR__ . '/lib/readEnv.php');
 
 class GetHazard
 {
-    const MAX_LON = 153.986667;
-    const MIN_LON = 122.9325;
-    const MAX_LAT = 45.557228;
-    const MIN_LAT = 20.425246;
+    // const MAX_LON = 153.986667;
+    // const MIN_LON = 122.9325;
+    // const MAX_LAT = 45.557228;
+    // const MIN_LAT = 20.425246;
     private string $apiKey;
 
     public function __construct()
@@ -15,14 +15,9 @@ class GetHazard
         $this->apiKey = readEnv()[5];
     }
 
-    public function getApiKey(): string
-    {
-        return $this->apiKey;
-    }
-
     public function getGeocoding(string $address): array
     {
-        $geocodeApiUrl = "https://maps.googleapis.com/maps/api/geocode/json?key=" . $this->getApiKey() . '&address=' . urlencode($address);
+        $geocodeApiUrl = "https://maps.googleapis.com/maps/api/geocode/json?key=" . $this->apiKey . '&address=' . urlencode($address);
 
       //Geocoding APIにリクエスト
     // $context = stream_context_create(array(

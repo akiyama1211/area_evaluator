@@ -13,20 +13,6 @@ class GetDemographics extends GetStatistics
         parent::__construct($area);
     }
 
-    public function getTime(): array
-    {
-        // 時間データを取得
-        $timeKeys = array_keys($this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][3]['CLASS']);
-
-        $fiveYearsKey = array_slice($timeKeys, count($timeKeys) - 3);
-
-        $timeCodes = [];
-        foreach ($fiveYearsKey as $yearKey) {
-            $timeCodes[] = $this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][3]['CLASS'][$yearKey]['@code'];
-        }
-        return $timeCodes;
-    }
-
     public function getStatisticData(): array
     {
         $categories = [
@@ -40,32 +26,26 @@ class GetDemographics extends GetStatistics
         // 'A5103',転入者数
         // 'A5104',転出者数
 
-        $timeCodes = $this->getTime();
+        $timeCode = $this->timeCode;
         $areaCode = $this->getArea();
-
-        // URLエンコード
         $statisticData = [];
+
+        foreach ($categories as $category) {
+            $info = $this->getInfo($this->appId, $this->statisticsId, $timeCode, $areaCode, $category);
+
+            $statisticData[$info['year']][$info['name']] = $info['value'] . $info['unit'];
+        }
+
+        $timeCodes = [
+            (string)((int)$timeCode - 1000000),
+            (string)((int)$timeCode - 2000000)
+        ];
+
         foreach ($timeCodes as $timeCode) {
             foreach ($categories as $category) {
-                $params = array(
-                    'appId' => $this->appId,
-                    'statsDataId' => $this->statisticsId,
-                    'cdTime' => $timeCode,
-                    'cdArea' => $areaCode,
-                    'cdCat01' => $category
-                );
-                $query = http_build_query($params, '', '&', PHP_QUERY_RFC3986);
-                // 統計データを取得
-                $url = 'http://api.e-stat.go.jp/rest/2.0/app/json/getStatsData?' . $query;
-                $json = file_get_contents($url);
-
-                $arr = json_decode($json, true);
-                $year = substr($timeCode, 0, 4);
-                $name = $arr['GET_STATS_DATA']['STATISTICAL_DATA']['CLASS_INF']['CLASS_OBJ'][1]['CLASS']['@name'];
-                $categoryName = explode('_', $name)[1];
-                $value = $arr['GET_STATS_DATA']['STATISTICAL_DATA']['DATA_INF']['VALUE']['$'];
-                $unit = $arr['GET_STATS_DATA']['STATISTICAL_DATA']['DATA_INF']['VALUE']['@unit'];
-                $statisticData[(int)$year][$categoryName] = $value . $unit;
+                $arr = $this->execQuery($this->appId, $this->statisticsId, $timeCode, $areaCode, $category);
+                $info = $this->processInfo($arr);
+                $statisticData[$info['year']][$info['name']] = $info['value'] . $info['unit'];
             }
         }
         return $statisticData;

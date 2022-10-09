@@ -7,7 +7,7 @@
         <title><?php echo $title?></title>
     </head>
     <body>
-        <h1>土地チェッカー</h1>
+        <h1>エリアチェッカー</h1>
         <?php include $content ?>
     </body>
 </html>
