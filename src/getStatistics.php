@@ -61,12 +61,12 @@ abstract class GetStatistics
         return $areaCode;
     }
 
-    public function execQuery(string $appId, string $statisticsId, string $timeCode, string $areaCode, string $category): array
+    public function execQuery(string $appId, string $statisticsId, string $areaCode, string $category): array
     {
         $params = array(
             'appId' => $appId,
             'statsDataId' => $statisticsId,
-            'cdTime' => $timeCode,
+            'cdTime' => $this->timeCode,
             'cdArea' => $areaCode,
             'cdCat01' => $category
         );
@@ -99,13 +99,13 @@ abstract class GetStatistics
         return $info;
     }
 
-    public function getInfo(string $appId, string $statisticsId, string $timeCode, string $areaCode, string $category): array
+    public function getInfo(string $appId, string $statisticsId, string $areaCode, string $category): array
     {
-        $arr = $this->execQuery($appId, $statisticsId, $timeCode, $areaCode, $category);
+        $arr = $this->execQuery($appId, $statisticsId, $areaCode, $category);
         $result = $this->exitData($arr);
         while (!$result) {
-            $timeCode = (string)((int)$timeCode - 1000000);
-            $arr = $this->execQuery($this->appId, $this->statisticsId, $timeCode, $areaCode, $category);
+            $this->timeCode = (string)((int)$this->timeCode - 1000000);
+            $arr = $this->execQuery($this->appId, $this->statisticsId, $areaCode, $category);
             $result = $this->exitData($arr);
         }
         $info = $this->processInfo($arr);
@@ -114,5 +114,5 @@ abstract class GetStatistics
 
     abstract public function getStatisticData();
 
-    abstract public function infoResult();
+    abstract public function evaluate();
 }

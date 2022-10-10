@@ -23,12 +23,11 @@ class GetHospital extends GetStatistics
         #I0950102_一般病院数（可住地面積100km2当たり）
         #I0950103_一般診療所数（可住地面積100km2当たり）
 
-        $timeCode = $this->timeCode;
         $areaCode = $this->getArea();
         $statisticData = [];
 
         foreach ($categories as $category) {
-            $info = $this->getInfo($this->appId, $this->statisticsId, $timeCode, $areaCode, $category);
+            $info = $this->getInfo($this->appId, $this->statisticsId, $areaCode, $category);
 
             $statisticData[$info['year']][$info['name']]
             ['area'] = $info['value'] . $info['unit'];
@@ -41,15 +40,32 @@ class GetHospital extends GetStatistics
         return $statisticData;
     }
 
-    public function infoResult(): void
+    public function evaluate(): array
     {
         $statisticData = $this->getStatisticData();
-        foreach ($statisticData as $year => $value) {
-            foreach ($value as $categoryName => $index) {
-                echo $year . '年の' . $categoryName . 'は' . $index['area'] . 'です。' . PHP_EOL;
-                echo '全国平均値は' . $index['average'] . '、全国中央値は' . $index['median'] . 'です。' . PHP_EOL;
-            }
+        $result = [];
+        $result['statisticData'] = $statisticData;
+        $result['category'] = '医療';
+        $result['score'] = 0;
+        $year = (int)substr($this->timeCode, 0, 4);
+        foreach ($statisticData[$year] as $category => $arr) {
+                $value = (float)$arr['area'];
+                $average = (float)$arr['average'];
+                $median = (float)$arr['median'];
+                if ($value >= $average && $value >= $median) {
+                    $result['score'] += 1;
+                    $result['message'][] = $category . 'が全国の平均値及び中央値を上回っています。';
+                } elseif ($value >= $average) {
+                    $result['score'] = +0.5;
+                    $result['message'][] = $category . 'が、全国の平均値を上回っていますが、中央値を下回っています。';
+                } elseif ($value >= $median) {
+                    $result['score'] = +0.5;
+                    $result['message'][] = $category . 'が、全国の中央値を上回っていますが、平均値を下回っています。';
+                } else {
+                    $result['message'][] = $category . 'が全国の平均値及び中央値を下回っています。';
+                }
         }
+        return $result;
     }
 
     public function createAverage(array $areaMetaData): void
@@ -89,8 +105,8 @@ class GetHospital extends GetStatistics
             '#I0950102',
             '#I0950103'
         ];
-        $timeCode = $this->getTime();
-        $lastYear = (int)substr($timeCode, 0, 4);
+
+        $lastYear = (int)substr($this->timeCode, 0, 4);
 
         foreach ($categories as $category) {
         $sql = "SELECT year FROM hospital WHERE category_id = '{$category}'";
@@ -108,7 +124,7 @@ class GetHospital extends GetStatistics
                     $params = array(
                         'appId' => $this->appId,
                         'statsDataId' => $this->statisticsId,
-                        'cdTime' => $timeCode,
+                        'cdTime' => $this->timeCode,
                         'cdArea' => $areaCode,
                         'cdCat01' => $category
                     );

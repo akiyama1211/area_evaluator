@@ -10,14 +10,14 @@ class GetHazard
     // const MIN_LAT = 20.425246;
     private string $apiKey;
 
-    public function __construct()
+    public function __construct(private string $address)
     {
         $this->apiKey = readEnv()[5];
     }
 
-    public function getGeocoding(string $address): array
+    public function getGeocoding(): array
     {
-        $geocodeApiUrl = "https://maps.googleapis.com/maps/api/geocode/json?key=" . $this->apiKey . '&address=' . urlencode($address);
+        $geocodeApiUrl = "https://maps.googleapis.com/maps/api/geocode/json?key=" . $this->apiKey . '&address=' . urlencode($this->address);
 
       //Geocoding APIにリクエスト
     // $context = stream_context_create(array(
@@ -38,9 +38,9 @@ class GetHazard
         ];
     }
 
-    public function getMaxDepth(string $address): float|int
+    public function getMaxDepth(): float|int|null
     {
-        $geocoding = $this->getGeocoding($address);
+        $geocoding = $this->getGeocoding();
 
         // if ($geocoding['lon'] < self::MIN_LON or self::MAX_LON < $geocoding['lon']) {
         //     echo '日本の緯度を入力してください' . PHP_EOL;
@@ -61,20 +61,25 @@ class GetHazard
             $maxDepth = (float)substr($maxDepthString[2], 1, strlen($maxDepthString[2]) - 2);
             return $maxDepth;
         } else {
-            return 10000;
+            return null;
         }
     }
 
-    public function infoResult(string $prefectures, string $municipalities, string $street, string $extendAddress)
+    public function evaluate(): array
     {
-        $address = $prefectures . $municipalities . $street . $extendAddress;
-        $maxDepth = $this->getMaxDepth($address);
+        $maxDepth = $this->getMaxDepth();
+        $result = [];
+        $result['statisticsData'][] = $maxDepth;
+        $result['category'] = '災害';
 
-    if ($maxDepth === 10000) {
-            echo 'この地域では、まだシミュレーションデータが登録されていないか、浸水が想定されていない区域となります。' . PHP_EOL;
+        if ($maxDepth === null) {
+            $result['score'] = 2;
+            $result['message'][] = 'この地域では、まだシミュレーションデータが登録されていないか、浸水が想定されていない区域となります。';
         } else {
-            echo 'この地点の洪水時の最大侵水深は' . $maxDepth . 'mです' . PHP_EOL;
+            $result['score'] = 1;
+            $result['message'][] = 'この地点の洪水時の最大侵水深は' . $maxDepth . 'mです' . PHP_EOL;
         }
+        return $result;
     }
     //sample
     // https://suiboumap.gsi.go.jp/shinsuimap/Api/Public/GetMaxDepth?lon=132.825909&lat=35.41577515775&grouptype=0
