@@ -26,24 +26,24 @@ class GetDemographics extends GetStatistics
         // 'A5103',転入者数
         // 'A5104',転出者数
 
-        $timeCode = $this->timeCode;
         $areaCode = $this->getArea();
         $statisticData = [];
 
         foreach ($categories as $category) {
-            $info = $this->getInfo($this->appId, $this->statisticsId, $timeCode, $areaCode, $category);
+            $info = $this->getInfo($this->appId, $this->statisticsId, $areaCode, $category);
 
             $statisticData[$info['year']][$info['name']] = $info['value'] . $info['unit'];
         }
 
         $timeCodes = [
-            (string)((int)$timeCode - 1000000),
-            (string)((int)$timeCode - 2000000)
+            (string)((int)$this->timeCode - 1000000),
+            (string)((int)$this->timeCode - 2000000)
         ];
 
         foreach ($timeCodes as $timeCode) {
             foreach ($categories as $category) {
-                $arr = $this->execQuery($this->appId, $this->statisticsId, $timeCode, $areaCode, $category);
+                $this->timeCode = $timeCode;
+                $arr = $this->execQuery($this->appId, $this->statisticsId, $areaCode, $category);
                 $info = $this->processInfo($arr);
                 $statisticData[$info['year']][$info['name']] = $info['value'] . $info['unit'];
             }
@@ -51,12 +51,24 @@ class GetDemographics extends GetStatistics
         return $statisticData;
     }
 
-    public function infoResult(): void
+    public function evaluate(): array
     {
+        $result = [];
+        $changeValue = 0;
         $statisticData = $this->getStatisticData();
-        foreach ($statisticData as $year => $value) {
-            foreach ($value as $categoryName => $index)
-            echo $year . '年の' . $categoryName . 'は' . $index . 'です。' . PHP_EOL;
+        foreach ($statisticData as $year) {
+                $changeValue += (int)$year['出生数'] - (int)$year['死亡数'] + (int)$year['転入者数'] - (int)$year['転出者数'];
         }
+
+        $result['message'][] = '過去３年間の人口の増減値は' . $changeValue . 'です。' . PHP_EOL;
+        $result['statisticData'] = $statisticData;
+        $result['category'] = '人口動態';
+
+        if ($changeValue > 0) {
+            $result['score'] = 2;
+        } else {
+            $result['score'] = 1;
+        }
+        return $result;
     }
 }
