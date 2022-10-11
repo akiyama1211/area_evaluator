@@ -1,7 +1,6 @@
 <?php
 // パラメータ
 require_once __DIR__ . '/getStatistics.php';
-require_once __DIR__ . '/lib/readEnv.php';
 require_once __DIR__ . '/lib/sql.php';
 
 class GetHospital extends GetStatistics
@@ -54,15 +53,15 @@ class GetHospital extends GetStatistics
                 $median = (float)$arr['median'];
                 if ($value >= $average && $value >= $median) {
                     $result['score'] += 1;
-                    $result['message'][] = $category . 'が全国の平均値及び中央値を上回っています。';
+                    $result['message'][] = $category . 'は' . $value .  '施設であり、この数値は全国の平均値及び中央値を上回っています。';
                 } elseif ($value >= $average) {
                     $result['score'] = +0.5;
-                    $result['message'][] = $category . 'が、全国の平均値を上回っていますが、中央値を下回っています。';
+                    $result['message'][] = $category . 'は' . $value .  '施設であり、この数値は全国の平均値を上回っていますが、中央値を下回っています。';
                 } elseif ($value >= $median) {
                     $result['score'] = +0.5;
-                    $result['message'][] = $category . 'が、全国の中央値を上回っていますが、平均値を下回っています。';
+                    $result['message'][] = $category . 'は' . $value .  '施設であり、この数値は全国の中央値を上回っていますが、平均値を下回っています。';
                 } else {
-                    $result['message'][] = $category . 'が全国の平均値及び中央値を下回っています。';
+                    $result['message'][] = $category . 'は' . $value .  '施設であり、この数値は全国の平均値及び中央値を下回っています。';
                 }
         }
         return $result;

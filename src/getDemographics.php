@@ -1,7 +1,6 @@
 <?php
 // パラメータ
 require_once __DIR__ . '/getStatistics.php';
-require_once __DIR__ . '/lib/readEnv.php';
 
 class GetDemographics extends GetStatistics
 {
@@ -60,14 +59,15 @@ class GetDemographics extends GetStatistics
                 $changeValue += (int)$year['出生数'] - (int)$year['死亡数'] + (int)$year['転入者数'] - (int)$year['転出者数'];
         }
 
-        $result['message'][] = '過去３年間の人口の増減値は' . $changeValue . 'です。' . PHP_EOL;
         $result['statisticData'] = $statisticData;
         $result['category'] = '人口動態';
 
         if ($changeValue > 0) {
             $result['score'] = 2;
+            $result['message'][] = '過去３年間の人口の増減値は' . $changeValue . '人であり、増加傾向です。' . PHP_EOL;
         } else {
             $result['score'] = 1;
+            $result['message'][] = '過去３年間の人口の増減値は' . $changeValue . '人であり、減少傾向です。' . PHP_EOL;
         }
         return $result;
     }

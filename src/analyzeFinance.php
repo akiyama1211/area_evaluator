@@ -1,7 +1,6 @@
 <?php
 // パラメータ
 require_once __DIR__ . '/getStatistics.php';
-require_once __DIR__ . '/lib/readEnv.php';
 
 class AnalyzeFinance extends GetStatistics
 {

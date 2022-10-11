@@ -4,10 +4,6 @@ require_once(__DIR__ . '/lib/readEnv.php');
 
 class GetHazard
 {
-    // const MAX_LON = 153.986667;
-    // const MIN_LON = 122.9325;
-    // const MAX_LAT = 45.557228;
-    // const MIN_LAT = 20.425246;
     private string $apiKey;
 
     public function __construct(private string $address)
@@ -19,14 +15,13 @@ class GetHazard
     {
         $geocodeApiUrl = "https://maps.googleapis.com/maps/api/geocode/json?key=" . $this->apiKey . '&address=' . urlencode($this->address);
 
-      //Geocoding APIにリクエスト
-    // $context = stream_context_create(array(
-    //     'http' => array('ignore_errors' => true)
-    // ));
-    // $geocodeJson = file_get_contents($geocodeApiUrl, false, $context);
+        //Geocoding APIにリクエスト
+        // $context = stream_context_create(array(
+        //     'http' => array('ignore_errors' => true)
+        // ));
+        // $geocodeJson = file_get_contents($geocodeApiUrl, false, $context);
 
         $geocodeJson = file_get_contents($geocodeApiUrl);
-
         $geocodeData = json_decode($geocodeJson, true);
 
         $lon = $geocodeData["results"][0]["geometry"]["location"]["lng"];
@@ -41,43 +36,44 @@ class GetHazard
     public function getMaxDepth(): float|int|null
     {
         $geocoding = $this->getGeocoding();
-
-        // if ($geocoding['lon'] < self::MIN_LON or self::MAX_LON < $geocoding['lon']) {
-        //     echo '日本の緯度を入力してください' . PHP_EOL;
-        //     exit;
-        // }
-
-        // if ($geocoding['lat'] < self::MIN_LAT or self::MAX_LAT < $geocoding['lat']) {
-        //     echo '日本の経度を入力してください' . PHP_EOL;
-        //     exit;
-        // }
-
         $query = http_build_query($geocoding, '', '&', PHP_QUERY_RFC3986);
-        $getMaxDepthUrl = 'https://suiboumap.gsi.go.jp/shinsuimap/Api/Public/GetMaxDepth?' . $query;
+        $url = 'https://suiboumap.gsi.go.jp/shinsuimap/Api/Public/GetMaxDepth?' . $query;
 
-        $maxDepthInfo = file_get_contents($getMaxDepthUrl);
-        if ($maxDepthInfo <> 'null') {
-            $maxDepthString = explode('"', $maxDepthInfo);
-            $maxDepth = (float)substr($maxDepthString[2], 1, strlen($maxDepthString[2]) - 2);
-            return $maxDepth;
-        } else {
+        $json = file_get_contents($url);
+        $maxDepthInfo = json_decode($json, true);
+        if ($maxDepthInfo === null){
             return null;
         }
+        return $maxDepthInfo['Depth'];
+    }
+
+    public function getBreakPoint(): array
+    {
+        $geocoding = $this->getGeocoding();
+        $query = http_build_query($geocoding, '', '&', PHP_QUERY_RFC3986);
+        $url = 'https://suiboumap.gsi.go.jp/shinsuimap/Api/Public/GetBreakPoint?' . $query . '&returnparams=EntryRiverName';
+
+        $json = file_get_contents($url);
+        $arr = json_decode($json, true);
+        $breakPoint = array_unique(array_column($arr, 'EntryRiverName'));
+        return $breakPoint;
     }
 
     public function evaluate(): array
     {
         $maxDepth = $this->getMaxDepth();
         $result = [];
-        $result['statisticsData'][] = $maxDepth;
+        $result['statisticsData']['maxDepth'] = $maxDepth;
         $result['category'] = '災害';
 
         if ($maxDepth === null) {
             $result['score'] = 2;
-            $result['message'][] = 'この地域では、まだシミュレーションデータが登録されていないか、浸水が想定されていない区域となります。';
+            $result['message'][] = 'この地域は、浸水が想定されていない区域となります。まだシミュレーションデータが登録されていない可能性もあるため、詳細は自治体のハザードマップをご確認ください。';
         } else {
+            $breakPoint = $this->getBreakPoint();
+            $result['statisticsData']['breakPoint'] = $breakPoint;
             $result['score'] = 1;
-            $result['message'][] = 'この地点の洪水時の最大侵水深は' . $maxDepth . 'mです' . PHP_EOL;
+            $result['message'][] = 'この地点の洪水時の最大侵水深は' . $maxDepth . 'mです。破堤点となる可能性のある川は' . implode('、', $breakPoint) . 'です。';
         }
         return $result;
     }

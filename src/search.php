@@ -31,6 +31,7 @@ if (count($errors) === 0) {
     $time_start = microtime(true);
     $fullAddress = $prefectures . $municipalities . $street . $extendAddress;
     $address = $prefectures . ' ' . $municipalities;
+
     $getHazard = new GetHazard($fullAddress);
     $analyzeFinance = new AnalyzeFinance($address);
     $getDemographics = new GetDemographics($address);
@@ -42,12 +43,14 @@ if (count($errors) === 0) {
     foreach ($analyzers as $analyzer) {
         $results[] = $analyzer->evaluate();
     }
-    $categories = array_column($results, 'category');
     $scores = array_column($results, 'score');
+    $categories = array_column($results, 'category');
+    $chartItem = array_map(function($category) {
+        return '"' . $category . '"';
+    }, $categories);
 
     $time = microtime(true) - $time_start;
     echo "{$time} 秒";
-
     $title = '解析結果';
     $content = __DIR__ . '/views/result.php';
     include __DIR__ . '/views/layout.php';
