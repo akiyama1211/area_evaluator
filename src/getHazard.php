@@ -15,6 +15,12 @@ class GetHazard
     {
         $geocodeApiUrl = "https://maps.googleapis.com/maps/api/geocode/json?key=" . $this->apiKey . '&address=' . urlencode($this->address);
 
+        //Geocoding APIにリクエスト
+        // $context = stream_context_create(array(
+        //     'http' => array('ignore_errors' => true)
+        // ));
+        // $geocodeJson = file_get_contents($geocodeApiUrl, false, $context);
+
         $geocodeJson = file_get_contents($geocodeApiUrl);
         $geocodeData = json_decode($geocodeJson, true);
 
