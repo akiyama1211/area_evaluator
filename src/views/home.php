@@ -1,3 +1,4 @@
+
 <h3>住所入力欄</h3>
 
 <script src="https://yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
@@ -9,17 +10,18 @@
     町名：<input type="text"; class="p-street-address" name="street"/><br>
     番地：<input type="text"; class="p-extended-address" name="address" />
     <div>
-        <button type="submit">送信する</button>
+        <button type="submit">解析開始</button>
     </div>
 </form>
 
+<a href="explain.php">使い方</a>
 
-    <!-- <?php if (count($errors) > 0): ?>
-        <ul>
-            <?php foreach ($errors as $error):?>
-                <li>
-                    <?php echo $error?>
-                </li>
-                <?php endforeach?>
-            </ul>
-            <?php endif?> -->
+<!-- <?php if (count($errors) > 0): ?>
+    <ul>
+        <?php foreach ($errors as $error):?>
+            <li>
+                <?php echo $error?>
+            </li>
+            <?php endforeach?>
+        </ul>
+        <?php endif?> -->
