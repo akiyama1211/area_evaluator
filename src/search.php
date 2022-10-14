@@ -13,20 +13,17 @@ $extendAddress = htmlspecialchars($_POST['address'], ENT_QUOTES, 'UTF-8');
 $errors = [];
 
 if (!$prefectures) {
-    $errors['prefectures'] = '都道府県を入力してください。';
+    $errors[] = 'noPrefectures';
 }
 
 if (!$municipalities) {
-    $errors['municipalities'] = '市区町村を入力してください。';
+    $errors[] = 'noMunicipalities';
 }
 
 if (!$street) {
-    $errors['street'] = '町名を入力してください。';
+    $errors[] = 'noStreet';
 }
 
-// if (!$extendAddress) {
-//     $errors['extendAddress'] = '番地を入力してください。';
-// }
 if (count($errors) === 0) {
     $time_start = microtime(true);
     $fullAddress = $prefectures . $municipalities . $street . $extendAddress;
@@ -55,5 +52,12 @@ if (count($errors) === 0) {
     $content = __DIR__ . '/views/result.php';
     include __DIR__ . '/views/layout.php';
 } else {
-    header('Location: home.php');
+    $errorString = '';
+    for ($i = 0; $i < count($errors); $i++) {
+        if ($i <> 0) {
+            $errorString = $errorString . '&';
+        }
+        $errorString = $errorString . 'error[' . $i . ']=' . $errors[$i];
+    }
+    header('Location: home.php?' . $errorString);
 }

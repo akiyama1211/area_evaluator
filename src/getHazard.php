@@ -24,6 +24,10 @@ class GetHazard
         $geocodeJson = file_get_contents($geocodeApiUrl);
         $geocodeData = json_decode($geocodeJson, true);
 
+        if ($geocodeData['status'] === "ZERO_RESULTS") {
+            header('Location: home.php?error[]=noResult');
+        }
+
         $lon = $geocodeData["results"][0]["geometry"]["location"]["lng"];
         $lat = $geocodeData["results"][0]["geometry"]["location"]["lat"];
 
