@@ -13,23 +13,27 @@ $extendAddress = htmlspecialchars($_POST['address'], ENT_QUOTES, 'UTF-8');
 $errors = [];
 
 if (!$prefectures) {
-    $errors[] = 'noPrefectures';
+    $errors['prefectures'] = '都道府県を入力してください';
 }
 
 if (!$municipalities) {
-    $errors[] = 'noMunicipalities';
+    $errors['municipalities'] = '市区町村を入力してください';
 }
 
 if (!$street) {
-    $errors[] = 'noStreet';
+    $errors['street'] = '町名を入力してください';
 }
 
 if (count($errors) === 0) {
     $time_start = microtime(true);
-    $fullAddress = $prefectures . $municipalities . $street . $extendAddress;
-    $address = $prefectures . ' ' . $municipalities;
+    $address = [
+        'prefectures' => $prefectures,
+        'municipalities' => $municipalities,
+        'street' => $street,
+        'extendAddress' => $extendAddress
+    ];
 
-    $getHazard = new GetHazard($fullAddress);
+    $getHazard = new GetHazard($address);
     $analyzeFinance = new AnalyzeFinance($address);
     $getDemographics = new GetDemographics($address);
     $getHospital = new GetHospital($address);
@@ -52,12 +56,7 @@ if (count($errors) === 0) {
     $content = __DIR__ . '/views/result.php';
     include __DIR__ . '/views/layout.php';
 } else {
-    $errorString = '';
-    for ($i = 0; $i < count($errors); $i++) {
-        if ($i <> 0) {
-            $errorString = $errorString . '&';
-        }
-        $errorString = $errorString . 'error[' . $i . ']=' . $errors[$i];
-    }
-    header('Location: home.php?' . $errorString);
+    $title = 'エリアチェッカー';
+    $content = __DIR__ . '/views/home.php';
+    include __DIR__ . '/views/layout.php';
 }

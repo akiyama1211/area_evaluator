@@ -8,9 +8,11 @@ abstract class GetStatistics
     protected string $appId;
     protected array $metaData;
     protected string $timeCode;
+    protected string $area;
 
-    public function __construct(protected string $area)
+    public function __construct(protected array $address)
     {
+        $this->area = $this->address['prefectures'] . ' ' .  $this->address['municipalities'];
         $this->appId = readEnv()[4];
         $this->metaData = $this->getMetaData();
         $this->timeCode = $this->getTime();
@@ -53,7 +55,14 @@ abstract class GetStatistics
         $areaKey = array_search($this->area, array_column($areaMetaData, '@name'));
 
         if (!$areaKey) {
-            echo '該当地域が存在しないため、処理を終了します。' . PHP_EOL;
+            $errors['result'] = '該当する住所が存在しないため、解析を終了します。';
+            $prefectures = $this->address['prefectures'];
+            $municipalities = $this->address['municipalities'];
+            $street = $this->address['street'];
+            $extendAddress = $this->address['extendAddress'];
+            $title = 'エリアチェッカー';
+            $content = __DIR__ . '/views/home.php';
+            include __DIR__ . '/views/layout.php';
             exit;
         }
 

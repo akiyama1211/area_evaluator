@@ -1,4 +1,4 @@
-<h3>「<?php echo $fullAddress?>」の解析結果は…</h3>
+<h3>「<?php echo implode($address) ?>」の解析結果は…</h3>
 <h3>８点中、<?php echo array_sum($scores)?>点です！</h3>
 <div>
   <canvas id="myChart" width="500" height="500"></canvas>

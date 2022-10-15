@@ -6,7 +6,7 @@ class GetDemographics extends GetStatistics
 {
     const STATISTICS_ID = '0000020201';
 
-    public function __construct($area)
+    public function __construct(array $area)
     {
         $this->statisticsId = self::STATISTICS_ID;
         parent::__construct($area);
