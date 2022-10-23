@@ -25,7 +25,6 @@ if (!$street) {
 }
 
 if (count($errors) === 0) {
-    $time_start = microtime(true);
     $address = [
         'prefectures' => $prefectures,
         'municipalities' => $municipalities,
@@ -46,12 +45,14 @@ if (count($errors) === 0) {
     }
     $scores = array_column($results, 'score');
     $categories = array_column($results, 'category');
+    $categoryScore = [];
+    for ($i = 0; $i < count($scores); $i++) {
+        $categoryScore[] = $categories[$i] . ':' . (string)$scores[$i];
+    }
     $chartItem = array_map(function($category) {
         return '"' . $category . '"';
-    }, $categories);
+    }, $categoryScore);
 
-    $time = microtime(true) - $time_start;
-    echo "{$time} 秒";
     $title = '解析結果';
     $content = __DIR__ . '/views/result.php';
     include __DIR__ . '/views/layout.php';

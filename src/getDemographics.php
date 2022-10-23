@@ -31,7 +31,7 @@ class GetDemographics extends GetStatistics
         foreach ($categories as $category) {
             $info = $this->getInfo($this->appId, $this->statisticsId, $areaCode, $category);
 
-            $statisticData[$info['year']][$info['name']] = $info['value'] . $info['unit'];
+            $statisticData[$info['year'] . '年'][$info['name']] = $info['value'] . $info['unit'];
         }
 
         $timeCodes = [
@@ -44,7 +44,7 @@ class GetDemographics extends GetStatistics
                 $this->timeCode = $timeCode;
                 $arr = $this->execQuery($this->appId, $this->statisticsId, $areaCode, $category);
                 $info = $this->processInfo($arr);
-                $statisticData[$info['year']][$info['name']] = $info['value'] . $info['unit'];
+                $statisticData[$info['year'] . '年'][$info['name']] = $info['value'] . $info['unit'];
             }
         }
         return $statisticData;
@@ -64,10 +64,10 @@ class GetDemographics extends GetStatistics
 
         if ($changeValue > 0) {
             $result['score'] = 2;
-            $result['message'][] = '過去３年間の人口の増減値は' . $changeValue . '人であり、増加傾向です。' . PHP_EOL;
+            $result['message'][] = $this->area . 'の過去３年間の人口の増減値は' . $changeValue . '人であり、増加傾向にあります。' . PHP_EOL;
         } else {
             $result['score'] = 1;
-            $result['message'][] = '過去３年間の人口の増減値は' . $changeValue . '人であり、減少傾向です。' . PHP_EOL;
+            $result['message'][] = $this->area . 'の過去３年間の人口の増減値は' . $changeValue . '人であり、減少傾向にあります。' . PHP_EOL;
         }
         return $result;
     }
