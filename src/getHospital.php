@@ -7,7 +7,7 @@ class GetHospital extends GetStatistics
 {
     const STATISTICS_ID = '0000020309';
 
-    public function __construct($area)
+    public function __construct(array $area)
     {
         $this->statisticsId = self::STATISTICS_ID;
         parent::__construct($area);
@@ -53,15 +53,15 @@ class GetHospital extends GetStatistics
                 $median = (float)$arr['median'];
                 if ($value >= $average && $value >= $median) {
                     $result['score'] += 1;
-                    $result['message'][] = $category . 'は' . $value .  '施設であり、この数値は全国の平均値及び中央値を上回っています。';
+                    $result['message'][] = $this->area . 'の' . $category . 'は' . $value .  '施設であり、この数値は全国の平均値及び中央値を上回っています。';
                 } elseif ($value >= $average) {
                     $result['score'] = +0.5;
-                    $result['message'][] = $category . 'は' . $value .  '施設であり、この数値は全国の平均値を上回っていますが、中央値を下回っています。';
+                    $result['message'][] = $this->area . 'の' . $category . 'は' . $value .  '施設であり、この数値は全国の平均値を上回っていますが、中央値を下回っています。';
                 } elseif ($value >= $median) {
                     $result['score'] = +0.5;
-                    $result['message'][] = $category . 'は' . $value .  '施設であり、この数値は全国の中央値を上回っていますが、平均値を下回っています。';
+                    $result['message'][] = $this->area . 'の' . $category . 'は' . $value .  '施設であり、この数値は全国の中央値を上回っていますが、平均値を下回っています。';
                 } else {
-                    $result['message'][] = $category . 'は' . $value .  '施設であり、この数値は全国の平均値及び中央値を下回っています。';
+                    $result['message'][] = $this->area . 'の' . $category . 'は' . $value .  '施設であり、この数値は全国の平均値及び中央値を下回っています。';
                 }
         }
         return $result;
