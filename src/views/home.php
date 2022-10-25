@@ -12,7 +12,7 @@
             </ul>
         <?php endif?>
         <script src="https://yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
-        <form action="search.php" method="POST" class="h-adr mb-5">
+        <form action="result" method="POST" class="h-adr mb-5">
             <span class="p-country-name" style="display:none;">Japan</span>
             <div class="form-group">
                 <label for="postal-code">郵便番号（例：1000014）</label>
@@ -60,5 +60,5 @@
         <h1>3. ツールの使い方は？</h1>
         <h2>住所を入力し、「解析開始」ボタンを押すだけ！</hS2>
     </div>
-    <a href="explain.php" class="btn btn-warning text-light my-5 p-4 font-weight-bold ">詳細はこちら</a>
+    <a href="explain" class="btn btn-warning text-light my-5 p-4 font-weight-bold ">詳細はこちら</a>
 </div>
