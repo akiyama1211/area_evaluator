@@ -19,7 +19,7 @@
                 <input type="text" class="p-postal-code form-control" size="8" maxlength="8" id="postal-code">
             </div>
             <p class="font-weight-normal">■郵便番号を入力すると町名まで<span class="font-weight-bold text-danger">自動的に入力されます。</span></p>
-            <p>■郵便番号検索は<a href="http://www.post.japanpost.jp/zipcode/" target="_blank" rel="noopener noreferrer">こちら</a></p>
+            <p class="font-weight-normal">■郵便番号検索は<a href="http://www.post.japanpost.jp/zipcode/" target="_blank" rel="noopener noreferrer">こちら</a></p>
             <div class="form-group">
                 <label for="prefectures">都道府県<span class="text-white bg-danger px-1 rounded">必須</span>（例：東京都）</label>
                 <input type="text" class="p-region form-control" name="prefectures" id="prefectures" value="<?php echo $prefectures?>" />

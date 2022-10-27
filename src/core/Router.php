@@ -14,6 +14,6 @@ class Router
                 return $pattern;
             }
         }
-        return ['controller' => 'shuffle', 'action' => 'index'];
+        return false;
     }
 }
