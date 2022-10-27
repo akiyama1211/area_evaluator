@@ -121,6 +121,6 @@
     </div>
   </div>
   <div class="text-center mb-5">
-    <a href="home.php" class="btn btn-info mb-5 p-4 font-weight-bold h1">トップへ</a>
+    <a href="/" class="btn btn-info mb-5 p-4 font-weight-bold h1">トップへ</a>
   </div>
 </div>

@@ -12,14 +12,14 @@
             </ul>
         <?php endif?>
         <script src="https://yubinbango.github.io/yubinbango/yubinbango.js" charset="UTF-8"></script>
-        <form action="search.php" method="POST" class="h-adr mb-5">
+        <form action="result" method="POST" class="h-adr mb-5">
             <span class="p-country-name" style="display:none;">Japan</span>
             <div class="form-group">
                 <label for="postal-code">郵便番号（例：1000014）</label>
                 <input type="text" class="p-postal-code form-control" size="8" maxlength="8" id="postal-code">
             </div>
             <p class="font-weight-normal">■郵便番号を入力すると町名まで<span class="font-weight-bold text-danger">自動的に入力されます。</span></p>
-            <p>■郵便番号検索は<a href="http://www.post.japanpost.jp/zipcode/" target="_blank" rel="noopener noreferrer">こちら</a></p>
+            <p class="font-weight-normal">■郵便番号検索は<a href="http://www.post.japanpost.jp/zipcode/" target="_blank" rel="noopener noreferrer">こちら</a></p>
             <div class="form-group">
                 <label for="prefectures">都道府県<span class="text-white bg-danger px-1 rounded">必須</span>（例：東京都）</label>
                 <input type="text" class="p-region form-control" name="prefectures" id="prefectures" value="<?php echo $prefectures?>" />
@@ -60,5 +60,5 @@
         <h1>3. ツールの使い方は？</h1>
         <h2>住所を入力し、「解析開始」ボタンを押すだけ！</hS2>
     </div>
-    <a href="explain.php" class="btn btn-warning text-light my-5 p-4 font-weight-bold ">詳細はこちら</a>
+    <a href="explain" class="btn btn-warning text-light my-5 p-4 font-weight-bold ">詳細はこちら</a>
 </div>
