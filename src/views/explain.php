@@ -1,6 +1,6 @@
 <div class="container">
     <h1>TOWN SELECTとは</h1>
-    <h3>新生活を始める街を選ぶ際に役立つツールです</h3>
+    <h3>新生活を始める街を選ぶ際に役立つツールです。</h3>
     <h3>入力された住所について、以下の4つの観点から分析します。</h3>
     <div class="explain font-weight-bold">
         <div class="point text-white p-4 mb-5">

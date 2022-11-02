@@ -1,0 +1,123 @@
+header, footer {
+  background-color: rgb(0, 101, 150);
+}
+
+.main {
+  width: 100%;
+}
+
+header {
+  height: auto;
+}
+
+footer {
+  height: 80px;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  background-color: rgb(226 234 241);
+  height: 100%;
+  margin: 0;
+}
+
+.title {
+  font-family: 'Courgette', cursive;
+  font-size: 4.5rem;
+}
+
+.topic {
+  background-color: rgb(223 234 241);
+  color: black;
+}
+
+.point {
+  background-color: rgb(95 152 185);
+  margin-bottom: 20px;
+  background-color: #5f98b9;
+}
+
+.overview {
+  background-color: rgb(95 152 184);
+}
+
+.overview ul {
+  display: flex;
+  flex-direction: column;
+}
+
+.list-unstyled li {
+  background-color: rgb(223 234 241);
+  border-radius: 30px;
+  padding: 20px 10px;
+  margin: 20px auto;
+  color: black;
+  text-align: center;
+  font-size: 1.6rem;
+  width: 20%;
+}
+
+.error-message p {
+  padding-top: 4px;
+}
+
+.error {
+  width: 30px;
+  height: 30px;
+}
+
+.explain a {
+  color: black;
+}
+
+.column {
+  width: 25%;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.wrapper {
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+  width: 100%;
+}
+
+.form-box {
+  margin: auto;
+  width: 50%;
+}
+
+.form-box .btn {
+  width: 100%;
+}
+
+/* result */
+.result {
+  font-size: 60px;
+  font-weight: bold;
+  width: 100%;
+}
+
+@media screen and (max-width:912px)
+{
+  .form-box {
+    width: 100%;
+  }
+
+  .column {
+    width: 100%;
+    padding-bottom: 15px;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .list-unstyled li {
+    width: 80%;
+  }
+}

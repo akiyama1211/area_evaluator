@@ -100,7 +100,6 @@ class AnalyzeFinance extends GetStatistics
             }
         }
 
-
         $result['statisticData'] = $statisticData;
         $result['category'] = '財政';
         if (!count($result['message'])) {

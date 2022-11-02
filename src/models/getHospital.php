@@ -1,7 +1,7 @@
 <?php
 // パラメータ
 require_once __DIR__ . '/getStatistics.php';
-require_once __DIR__ . '/lib/sql.php';
+require_once __DIR__ . '/../lib/sql.php';
 
 class GetHospital extends GetStatistics
 {
@@ -67,7 +67,7 @@ class GetHospital extends GetStatistics
         return $result;
     }
 
-    public function createAverage(array $areaMetaData): void
+    public function updateHospital(array $areaMetaData): void
     {
         $wardsOfTokyo = [
             '千代田区' => '13101',
@@ -108,15 +108,14 @@ class GetHospital extends GetStatistics
         $lastYear = (int)substr($this->timeCode, 0, 4);
 
         foreach ($categories as $category) {
-        $sql = "SELECT year FROM hospital WHERE category_id = '{$category}'";
-        $recordYear = (int)getData($sql)[0]['year'];
+            $sql = "SELECT year FROM hospital WHERE category_id = '{$category}'";
+            $recordYear = (int)getData($sql)[0]['year'];
 
-        if ($lastYear > $recordYear) {
-
-            $sql = 'DELETE FROM hospital WHERE category_id = (?)';
-            $deleteValue = [];
-            $deleteValue[] = $category;
-            deleteData($sql, $deleteValue);
+            if ($lastYear > $recordYear) {
+                $sql = 'DELETE FROM hospital WHERE category_id = (?)';
+                $deleteValue = [];
+                $deleteValue[] = $category;
+                deleteData($sql, $deleteValue);
 
                 $statisticData = [];
                 foreach ($areaCodes as $areaCode) {

@@ -45,14 +45,14 @@
 <div class="overview text-white font-weight-bold text-center py-5">
     <div class="my-5">
         <h1>1. TOWN SELECTとは？</h1>
-        <h2>「TOWN SELECT」は、より良い街を選択するためのWebサービスです。</h2>
+        <h2>「TOWN SELECT」は、より良い街を選択するための<span class="d-inline-block">Webサービスです。</span></h2>
     </div>
     <div class="my-5">
         <h1>2. TOWN SELECTでわかること</h1>
         <ul class="list-unstyled">
             <li>水害の可能性</li>
-            <li>財政健全化判断比率</li>
-            <li>人口動態の傾向</li>
+            <li>財政健全化<span class="d-inline-block">判断比率</span></li>
+            <li>人口動態の<span class="d-inline-block">傾向</span></li>
             <li>医療施設数</li>
         </ul>
     </div>

@@ -42,6 +42,7 @@ class Application
         return [
             '/' => ['controller' => 'home', 'action' => 'index'],
             '/explain' => ['controller' => 'home', 'action' => 'explain'],
+            '/inquiry' => ['controller' => 'home', 'action' => 'inquiry'],
             '/result' => ['controller' => 'analyze', 'action' => 'index'],
         ];
     }

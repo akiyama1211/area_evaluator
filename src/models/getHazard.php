@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__ . '/lib/readEnv.php');
+require_once(__DIR__ . '/../lib/readEnv.php');
 
 class GetHazard
 {
@@ -16,12 +16,6 @@ class GetHazard
     public function getGeocoding(): array
     {
         $geocodeApiUrl = "https://maps.googleapis.com/maps/api/geocode/json?key=" . $this->apiKey . '&address=' . urlencode($this->area);
-
-        //Geocoding APIにリクエスト
-        // $context = stream_context_create(array(
-        //     'http' => array('ignore_errors' => true)
-        // ));
-        // $geocodeJson = file_get_contents($geocodeApiUrl, false, $context);
 
         $geocodeJson = file_get_contents($geocodeApiUrl);
         $geocodeData = json_decode($geocodeJson, true);

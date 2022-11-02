@@ -2,3 +2,4 @@ docker/db/mysql_data
 docker/db/db-variables.env
 src/vendor
 src/.env
+src/tmp

@@ -26,4 +26,12 @@ class HomeController extends Controller
 
         include __DIR__ . '/../views/layout.php';
     }
+
+    public function inquiry()
+    {
+        $title = 'TOWN SELECT お問い合わせ';
+        $content = __DIR__ . '/../views/inquiry.php';
+
+        include __DIR__ . '/../views/layout.php';
+    }
 }

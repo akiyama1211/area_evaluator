@@ -1,7 +1,7 @@
 <div class="container">
   <h2 class="text-center my-4">「<?php echo implode($address) ?>」の解析結果は…</h2>
   <div class="mb-5 border border-dark pr-4">
-    <h1 class="text-center text-success my-4 result"><?php echo array_sum($scores)?>点です！(8点満点)</h1>
+    <h1 class="text-center text-success my-4 result"><?php echo array_sum($scores)?>点です！<span class="d-inline-block">(8点満点)</span></h1>
     <div class="mb-5">
       <canvas id="myChart" class="mx-auto"></canvas>
     </div>
@@ -116,8 +116,8 @@
       <?php endif?>
     <?php endforeach?>
     </ul>
-    <div class="width-80 border-danger">
-      <p class="h5 font-weight-bold text-danger my-4">なお、この分析は現在公開されている最新年度のデータを基に行われています。そのため、公開データが更新されていない場合、分析時点との乖離が大きくなる可能性があります。</p>
+    <div class="width-60 border border-danger ml-4 my-4">
+      <p class="h6 font-weight-bold text-danger m-3">なお、この分析は現在公開されている最新年度のデータを基に行われています。そのため、公開データが更新されていない場合、分析時点との乖離が大きくなる可能性があります。</p>
     </div>
   </div>
   <div class="text-center mb-5">

@@ -18,7 +18,8 @@
             <div class="main">
                 <?php include $content ?>
             </div>
-            <footer class="mt-auto">
+            <footer class="mt-auto  d-flex align-items-center justify-content-end">
+                <h5><a class="text-white pr-5" href="inquiry">お問い合わせ</a></h5>
             </footer>
         </div>
     </body>
