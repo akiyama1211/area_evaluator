@@ -17,9 +17,20 @@ function connectData(): mysqli
     return $connectData;
 }
 
+function dropTable(string $sql): void
+{
+    $dropper = connectData();
+    $result = $dropper->query($sql);
+    if($result) {
+        echo 'テーブルを削除しました' . PHP_EOL;
+    } else {
+        echo 'テーブルを削除できませんでした' . PHP_EOL;
+    }
+    $dropper->close();
+}
+
 function createTable(string $sql): void
 {
-
     $creator = connectData();
     $result = $creator->query($sql);
     if($result) {

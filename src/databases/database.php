@@ -2,6 +2,8 @@
 
 require_once(__DIR__ . '/../lib/sql.php');
 
+$dropSql = 'DROP TABLE IF EXISTS hospital';
+
 $createSql = <<<EOT
 CREATE TABLE hospital(
     year INTEGER NOT NULL,
@@ -45,6 +47,7 @@ INSERT INTO hospital (
 );
 EOT;
 
+dropTable($dropSql);
 createTable($createSql);
 foreach ([$insertHospitalSql, $insertClinicSql] as $sql) {
     insertTable($sql);
