@@ -69,10 +69,18 @@ class GetHazard
 
     public function evaluate(): array
     {
-        $maxDepth = $this->getMaxDepth();
         $result = [];
-        $result['statisticsData']['maxDepth'] = $maxDepth;
         $result['category'] = '災害';
+
+        if ($this->address['extendAddress'] === '') {
+            $result['score'] = 0;
+            $result['message'][] = '番地が入力されていないため、分析できませんでした。';
+            return $result;
+        }
+
+        $maxDepth = $this->getMaxDepth();
+        $result['statisticsData']['maxDepth'] = $maxDepth;
+
 
         if ($maxDepth === null) {
             $result['score'] = 2;
