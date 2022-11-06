@@ -59,7 +59,11 @@
     <?php foreach ($results as $result):?>
         <h5><li><?php echo $result['category']?></li></h5>
         <?php foreach ($result['message'] as $message):?>
-          <p><?php echo $message?></p>
+          <?php if ($result['score'] === 0):?>
+            <p class="text-danger font-weight-bold"><?php echo $message?></p>
+          <?php else:?>
+            <p><?php echo $message?></p>
+          <?php endif?>
         <?php endforeach?>
         <?php if ($result['category'] <> '災害'):?>
           <div class="table-responsive-sm">
@@ -92,19 +96,19 @@
           <tbody>
               <?php foreach ($result['statisticData'] as $year => $arr):?>
                 <tr>
-                  <td><?php echo $year?>年</td>
+                  <td><?php echo $address['municipalities']?><span class="d-inline-block"><?php echo '(' . $year . '年)'?></span></td>
                   <?php foreach ($arr as $category => $value):?>
                     <td><?php echo $value['area']?></td>
                   <?php endforeach?>
                 </tr>
                 <tr>
-                  <td>全国平均値</td>
+                  <td>全国平均値<?php echo '(' . $year . '年)'?></td>
                   <?php foreach ($arr as $category => $value):?>
                     <td><?php echo $value['average']?></td>
                   <?php endforeach?>
                 </tr>
                 <tr>
-                  <td>全国中央値</td>
+                  <td>全国中央値<?php echo '(' . $year . '年)'?></td>
                   <?php foreach ($arr as $category => $value):?>
                     <td><?php echo $value['median']?></td>
                   <?php endforeach?>
