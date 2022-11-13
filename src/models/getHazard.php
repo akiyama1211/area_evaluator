@@ -26,7 +26,7 @@ class GetHazard
             $municipalities = $this->address['municipalities'];
             $street = $this->address['street'];
             $extendAddress = $this->address['extendAddress'];
-            $title = 'エリアチェッカー';
+            $title = 'TOWN SELECT';
             $content = __DIR__ . '/../views/home.php';
             include __DIR__ . '/../views/layout.php';
             exit;
