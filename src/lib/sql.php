@@ -21,7 +21,7 @@ function dropTable(string $sql): void
 {
     $dropper = connectData();
     $result = $dropper->query($sql);
-    if($result) {
+    if ($result) {
         echo 'テーブルを削除しました' . PHP_EOL;
     } else {
         echo 'テーブルを削除できませんでした' . PHP_EOL;
@@ -33,7 +33,7 @@ function createTable(string $sql): void
 {
     $creator = connectData();
     $result = $creator->query($sql);
-    if($result) {
+    if ($result) {
         echo 'テーブルを作成しました' . PHP_EOL;
     } else {
         echo 'テーブルを作成できませんでした' . PHP_EOL;
@@ -45,7 +45,7 @@ function insertTable(string $sql): void
 {
     $creator = connectData();
     $result = $creator->query($sql);
-    if($result) {
+    if ($result) {
         echo 'レコードを作成しました' . PHP_EOL;
     } else {
         echo 'レコードを作成できませんでした' . PHP_EOL;
@@ -89,7 +89,7 @@ function deleteData(string $sql, array $check): void
 function judgeType(array $arr): array
 {
     $types = [];
-    foreach($arr as $value) {
+    foreach ($arr as $value) {
         $type = gettype($value);
         if ($type === 'integer') {
             $types[] = 'i';

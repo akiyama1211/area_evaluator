@@ -31,9 +31,9 @@ class Application
     {
         $controllerClass = ucfirst($controllerName) . 'Controller';
         if (!class_exists($controllerClass)) {
-            throw new HttpNotFoundException;
+            throw new HttpNotFoundException();
         }
-        $controller = new $controllerClass;
+        $controller = new $controllerClass();
         $controller->run($action);
     }
 

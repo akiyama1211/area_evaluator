@@ -1,5 +1,5 @@
 <?php
-// パラメータ
+
 require_once __DIR__ . '/getStatistics.php';
 
 class AnalyzeFinance extends GetStatistics

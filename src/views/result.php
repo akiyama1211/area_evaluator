@@ -14,7 +14,7 @@
           //データの設定
           data: {
               //データ項目のラベル
-              labels: [<? echo implode(',', $chartItem)?>],
+              labels: [<?php echo implode(',', $chartItem)?>],
               //データセット
               datasets: [{
                 //背景色
@@ -28,7 +28,7 @@
                   //結合点より外でマウスホバーを認識する範囲（ピクセル単位）
                   hitRadius: 5,
                   //グラフのデータ
-                  data: [<? echo implode(',', $scores)?>]
+                  data: [<?php echo implode(',', $scores)?>]
               }]
           },
           //オプションの設定
@@ -56,35 +56,35 @@
         });
     </script>
     <ul>
-    <?php foreach ($results as $result):?>
+    <?php foreach ($results as $result) :?>
         <h5><li><?php echo $result['category']?></li></h5>
-        <?php foreach ($result['message'] as $message):?>
-          <?php if ($result['score'] === 0):?>
-            <p class="text-danger font-weight-bold"><?php echo $message?></p>
-          <?php else:?>
+        <?php foreach ($result['message'] as $message) :?>
+            <?php if ($result['score'] === 0) :?>
+              <p class="text-danger font-weight-bold"><?php echo $message?></p>
+            <?php else :?>
             <p><?php echo $message?></p>
           <?php endif?>
         <?php endforeach?>
-        <?php if ($result['category'] <> '災害'):?>
+        <?php if ($result['category'] <> '災害') :?>
           <div class="table-responsive-sm">
             <table class="table table-info border-danger">
               <thead>
                 <tr>
                   <th></th>
-                  <?php foreach ($result['statisticData'] as $year => $arr):?>
-                    <?php foreach ($arr as $category => $value):?>
+                  <?php foreach ($result['statisticData'] as $year => $arr) :?>
+                    <?php foreach ($arr as $category => $value) :?>
                       <th><?php echo $category?></th>
                       <?php endforeach?>
                       <?php break?>
                       <?php endforeach?>
                     </tr>
                   </thead>
-          <?php if ($result['category'] <> '医療'):?>
+          <?php if ($result['category'] <> '医療') :?>
               <tbody>
-                <?php foreach ($result['statisticData'] as $year => $arr):?>
+                <?php foreach ($result['statisticData'] as $year => $arr) :?>
                   <tr>
                     <td><?php echo $year?></td>
-                    <?php foreach ($arr as $category => $value):?>
+                    <?php foreach ($arr as $category => $value) :?>
                       <td><?php echo $value?></td>
                     <?php endforeach?>
                   </tr>
@@ -92,24 +92,24 @@
               </tbody>
             </table>
           </div>
-        <?php else:?>
+        <?php else :?>
           <tbody>
-              <?php foreach ($result['statisticData'] as $year => $arr):?>
+              <?php foreach ($result['statisticData'] as $year => $arr) :?>
                 <tr>
                   <td><?php echo $address['municipalities']?><span class="d-inline-block"><?php echo '(' . $year . '年)'?></span></td>
-                  <?php foreach ($arr as $category => $value):?>
+                  <?php foreach ($arr as $category => $value) :?>
                     <td><?php echo $value['area']?></td>
                   <?php endforeach?>
                 </tr>
                 <tr>
                   <td>全国平均値<?php echo '(' . $year . '年)'?></td>
-                  <?php foreach ($arr as $category => $value):?>
+                  <?php foreach ($arr as $category => $value) :?>
                     <td><?php echo $value['average']?></td>
                   <?php endforeach?>
                 </tr>
                 <tr>
                   <td>全国中央値<?php echo '(' . $year . '年)'?></td>
-                  <?php foreach ($arr as $category => $value):?>
+                  <?php foreach ($arr as $category => $value) :?>
                     <td><?php echo $value['median']?></td>
                   <?php endforeach?>
                 </tr>

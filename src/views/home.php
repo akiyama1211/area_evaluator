@@ -1,12 +1,12 @@
 <div class="container">
     <div class="form-box mt-5 font-weight-bold">
-        <?php if (count($errors)): ?>
+        <?php if (count($errors)) :?>
             <ul class="text-white bg-danger py-2 mw-50 pr-3">
                 <div class="d-flex align-items-stretch error-message ">
                     <img src="https://3.bp.blogspot.com/-wf5p8ilIxOQ/U00KH4pCHPI/AAAAAAAAfOk/CcOEZqgGMKY/s400/mark_chuui.png" alt="" class="error">
                     <p>エラー！</p>
                 </div>
-                <?php foreach ($errors as $error):?>
+                <?php foreach ($errors as $error) :?>
                     <li><?php echo $error?></li>
                 <?php endforeach?>
             </ul>

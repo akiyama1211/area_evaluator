@@ -54,7 +54,7 @@ class AnalyzeController extends Controller
             for ($i = 0; $i < count($scores); $i++) {
                 $categoryScore[] = $categories[$i] . ':' . (string)$scores[$i];
             }
-            $chartItem = array_map(function($category) {
+            $chartItem = array_map(function ($category) {
                 return '"' . $category . '"';
             }, $categoryScore);
 

@@ -1,5 +1,5 @@
 <?php
-// パラメータ
+
 require_once __DIR__ . '/getStatistics.php';
 require_once __DIR__ . '/../lib/sql.php';
 
@@ -48,21 +48,21 @@ class GetHospital extends GetStatistics
         $result['score'] = 0;
         $year = (int)substr($this->timeCode, 0, 4);
         foreach ($statisticData[$year] as $category => $arr) {
-                $value = (float)$arr['area'];
-                $average = (float)$arr['average'];
-                $median = (float)$arr['median'];
-                if ($value >= $average && $value >= $median) {
-                    $result['score'] += 1;
-                    $result['message'][] = $this->area . 'の' . $category . 'は' . $value .  '施設であり、この数値は全国の平均値及び中央値を上回っています。';
-                } elseif ($value >= $average) {
-                    $result['score'] = +0.5;
-                    $result['message'][] = $this->area . 'の' . $category . 'は' . $value .  '施設であり、この数値は全国の平均値を上回っていますが、中央値を下回っています。';
-                } elseif ($value >= $median) {
-                    $result['score'] = +0.5;
-                    $result['message'][] = $this->area . 'の' . $category . 'は' . $value .  '施設であり、この数値は全国の中央値を上回っていますが、平均値を下回っています。';
-                } else {
-                    $result['message'][] = $this->area . 'の' . $category . 'は' . $value .  '施設であり、この数値は全国の平均値及び中央値を下回っています。';
-                }
+            $value = (float)$arr['area'];
+            $average = (float)$arr['average'];
+            $median = (float)$arr['median'];
+            if ($value >= $average && $value >= $median) {
+                $result['score'] += 1;
+                $result['message'][] = $this->area . 'の' . $category . 'は' . $value .  '施設であり、この数値は全国の平均値及び中央値を上回っています。';
+            } elseif ($value >= $average) {
+                $result['score'] = +0.5;
+                $result['message'][] = $this->area . 'の' . $category . 'は' . $value .  '施設であり、この数値は全国の平均値を上回っていますが、中央値を下回っています。';
+            } elseif ($value >= $median) {
+                $result['score'] = +0.5;
+                $result['message'][] = $this->area . 'の' . $category . 'は' . $value .  '施設であり、この数値は全国の中央値を上回っていますが、平均値を下回っています。';
+            } else {
+                $result['message'][] = $this->area . 'の' . $category . 'は' . $value .  '施設であり、この数値は全国の平均値及び中央値を下回っています。';
+            }
         }
         return $result;
     }
@@ -83,7 +83,7 @@ class GetHospital extends GetStatistics
             '大田区' => '13111',
             '世田谷区' => '13112',
             '渋谷区' => '13113',
-            '中野区' =>'13114',
+            '中野区' => '13114',
             '杉並区' => '13115',
             '豊島区' => '13116',
             '北区' => '13117',
@@ -136,7 +136,7 @@ class GetHospital extends GetStatistics
                     $statisticData[] = (float)$value;
                 }
                 sort($statisticData);
-                $average = array_sum($statisticData)/count($statisticData);
+                $average = array_sum($statisticData) / count($statisticData);
                 if (count($statisticData) % 2 === 0) {
                     $median = ($statisticData[(count($statisticData) / 2) - 1] + $statisticData[(count($statisticData) / 2)]) / 2;
                 } else {

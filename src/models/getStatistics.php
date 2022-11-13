@@ -1,5 +1,5 @@
 <?php
-// パラメータ
+
 require_once __DIR__ . '/../lib/readEnv.php';
 
 abstract class GetStatistics
