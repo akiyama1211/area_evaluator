@@ -1,10 +1,5 @@
 <?php
 
-require_once __DIR__ . '/core/Router.php';
-require_once __DIR__ . '/core/HttpNotFoundException.php';
-require_once __DIR__ . '/controller/HomeController.php';
-require_once __DIR__ . '/controller/AnalyzeController.php';
-
 class Application
 {
     public function __construct()

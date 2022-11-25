@@ -1,6 +1,7 @@
 <?php
 
-require_once(__DIR__ . '/../models/getHospital.php');
+require_once(__DIR__ . '/../models/GetStatistics.php');
+require_once(__DIR__ . '/../models/GetHospital.php');
 
 $address = [
     'prefectures' => '東京都',

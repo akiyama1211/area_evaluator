@@ -1,6 +1,5 @@
 <?php
 
-require_once __DIR__ . '/getStatistics.php';
 require_once __DIR__ . '/../lib/sql.php';
 
 class GetHospital extends GetStatistics

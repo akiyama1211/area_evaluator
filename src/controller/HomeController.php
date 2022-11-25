@@ -1,7 +1,6 @@
 <?php
 
 require_once(__DIR__ . '/../lib/sql.php');
-require_once(__DIR__ . '/../core/Controller.php');
 
 class HomeController extends Controller
 {

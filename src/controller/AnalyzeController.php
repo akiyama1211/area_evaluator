@@ -1,11 +1,5 @@
 <?php
 
-require_once(__DIR__ . '/../core/Controller.php');
-require_once(__DIR__ . '/../models/getHazard.php');
-require_once(__DIR__ . '/../models/analyzeFinance.php');
-require_once(__DIR__ . '/../models/getHospital.php');
-require_once(__DIR__ . '/../models/getDemographics.php');
-
 class AnalyzeController extends Controller
 {
     public function index()

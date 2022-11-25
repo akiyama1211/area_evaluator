@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/getStatistics.php';
-
 class GetDemographics extends GetStatistics
 {
     const STATISTICS_ID = '0000020201';
