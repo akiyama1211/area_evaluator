@@ -7,7 +7,7 @@ class Router
         $this->routes = $routes;
     }
 
-    public function resolve($pathInfo)
+    public function resolve($pathInfo): mixed
     {
         foreach ($this->routes as $path => $pattern) {
             if ($path === $pathInfo) {

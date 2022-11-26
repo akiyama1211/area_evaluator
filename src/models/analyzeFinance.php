@@ -32,7 +32,7 @@ class AnalyzeFinance extends GetStatistics
             'D2214',
             'D2215'
         ];
-        // cdCat01='D2203'_経常収支比率
+
         // cdCat01='D2211'_実質公債費比率
         // cdCat01='D2212'_将来負担比率
         // cdCat01='D2214'_実質赤字比率

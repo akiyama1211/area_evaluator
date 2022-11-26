@@ -95,4 +95,7 @@ class GetHazard
     //sample
     // https://suiboumap.gsi.go.jp/shinsuimap/Api/Public/GetMaxDepth?lon=132.825909&lat=35.41577515775&grouptype=0
     // →float(1.279)
+
+    // 〒3060215
+    // 番地3956
 }

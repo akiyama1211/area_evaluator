@@ -4,7 +4,7 @@ class Controller
 {
     protected $actionName;
 
-    public function run($action)
+    public function run($action): mixed
     {
         $this->actionName = $action;
 
@@ -15,7 +15,7 @@ class Controller
         return $content;
     }
 
-    protected function render($variables = [], $template = null, $layout = 'layout')
+    protected function render($variables = [], $template = null, $layout = 'layout'): string|false
     {
         $view = new View(__DIR__ . '/../views');
 

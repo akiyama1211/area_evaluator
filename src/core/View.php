@@ -9,7 +9,7 @@ class View
         $this->baseDir = $baseDir;
     }
 
-    public function render($path, $variables, $layout = false)
+    public function render($path, $variables, $layout = false): string|false
     {
         extract($variables);
 

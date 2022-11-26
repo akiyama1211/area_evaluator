@@ -4,7 +4,7 @@ require_once(__DIR__ . '/../lib/sql.php');
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(): string
     {
         return $this->render(
             [
@@ -18,7 +18,7 @@ class HomeController extends Controller
         );
     }
 
-    public function explain()
+    public function explain(): string|false
     {
         return $this->render(
             [
@@ -27,7 +27,7 @@ class HomeController extends Controller
         );
     }
 
-    public function inquiry()
+    public function inquiry(): string|false
     {
         return $this->render(
             [
@@ -36,7 +36,7 @@ class HomeController extends Controller
         );
     }
 
-    public function analyze()
+    public function analyze(): string|false
     {
         $prefectures = htmlspecialchars($_POST['prefectures'], ENT_QUOTES, 'UTF-8');
         $municipalities = htmlspecialchars($_POST['municipalities'], ENT_QUOTES, 'UTF-8');
@@ -89,10 +89,9 @@ class HomeController extends Controller
                             'extendAddress' => $extendAddress,
                             'title' => 'トップページ',
                         ], 'index');
-                    exit;
                 }
 
-                $results[] = $analyzer->evaluate();
+                $results[] = $result;
             }
             $scores = array_column($results, 'score');
             $categories = array_column($results, 'category');
