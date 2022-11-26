@@ -62,7 +62,7 @@
             <?php if ($result['score'] === 0) :?>
               <p class="text-danger font-weight-bold"><?php echo $message?></p>
             <?php else :?>
-            <p><?php echo $message?></p>
+            <p class="text-primary font-weight-bold"><?php echo $message?></p>
           <?php endif?>
         <?php endforeach?>
         <?php if ($result['category'] <> '災害') :?>

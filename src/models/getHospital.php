@@ -21,11 +21,10 @@ class GetHospital extends GetStatistics
         #I0950102_一般病院数（可住地面積100km2当たり）
         #I0950103_一般診療所数（可住地面積100km2当たり）
 
-        $areaCode = $this->getArea();
         $statisticData = [];
 
         foreach ($categories as $category) {
-            $info = $this->getInfo($this->appId, $this->statisticsId, $areaCode, $category);
+            $info = $this->getInfo($this->appId, $this->statisticsId, $category);
 
             $statisticData[$info['year']][$info['name']]
             ['area'] = $info['value'] . $info['unit'];
@@ -40,6 +39,11 @@ class GetHospital extends GetStatistics
 
     public function evaluate(): array
     {
+        if ($this->areaCode === 'ZERO_RESULTS') {
+            // 該当住所が見つからない時のエラー処理
+            return ['ZERO_RESULTS'];
+        }
+
         $statisticData = $this->getStatisticData();
         $result = [];
         $result['statisticData'] = $statisticData;

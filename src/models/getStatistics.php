@@ -9,6 +9,7 @@ abstract class GetStatistics
     protected array $metaData;
     protected string $timeCode;
     protected string $area;
+    protected string $areaCode;
 
     public function __construct(protected array $address)
     {
@@ -16,6 +17,7 @@ abstract class GetStatistics
         $this->appId = readEnv()[4];
         $this->metaData = $this->getMetaData();
         $this->timeCode = $this->getTime();
+        $this->areaCode = $this->getArea();
     }
 
     public function getMetaData(): array
@@ -55,28 +57,21 @@ abstract class GetStatistics
         $areaKey = array_search($this->area, array_column($areaMetaData, '@name'));
 
         if (!$areaKey) {
-            $errors['result'] = '該当する住所が存在しないため、解析を終了します。';
-            $prefectures = $this->address['prefectures'];
-            $municipalities = $this->address['municipalities'];
-            $street = $this->address['street'];
-            $extendAddress = $this->address['extendAddress'];
-            $title = 'TOWN SELECT';
-            $content = __DIR__ . '/../views/home.php';
-            include __DIR__ . '/../views/layout.php';
-            exit;
+            // 該当住所が見つからない時のエラー処理
+            return 'ZERO_RESULTS';
         }
 
         $areaCode = $this->metaData['GET_META_INFO']['METADATA_INF']['CLASS_INF']['CLASS_OBJ'][2]['CLASS'][$areaKey]['@code'];
         return $areaCode;
     }
 
-    public function execQuery(string $appId, string $statisticsId, string $areaCode, string $category): array
+    public function execQuery(string $appId, string $statisticsId, string $category): array
     {
         $params = array(
             'appId' => $appId,
             'statsDataId' => $statisticsId,
             'cdTime' => $this->timeCode,
-            'cdArea' => $areaCode,
+            'cdArea' => $this->areaCode,
             'cdCat01' => $category
         );
         $query = http_build_query($params, '', '&', PHP_QUERY_RFC3986);
@@ -108,13 +103,13 @@ abstract class GetStatistics
         return $info;
     }
 
-    public function getInfo(string $appId, string $statisticsId, string $areaCode, string $category): array
+    public function getInfo(string $appId, string $statisticsId, string $category): array
     {
-        $arr = $this->execQuery($appId, $statisticsId, $areaCode, $category);
+        $arr = $this->execQuery($appId, $statisticsId, $category);
         $result = $this->exitData($arr);
         while (!$result) {
             $this->timeCode = (string)((int)$this->timeCode - 1000000);
-            $arr = $this->execQuery($this->appId, $this->statisticsId, $areaCode, $category);
+            $arr = $this->execQuery($this->appId, $this->statisticsId, $category);
             $result = $this->exitData($arr);
         }
         $info = $this->processInfo($arr);

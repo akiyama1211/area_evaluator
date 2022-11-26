@@ -23,11 +23,10 @@ class GetDemographics extends GetStatistics
         // 'A5103',転入者数
         // 'A5104',転出者数
 
-        $areaCode = $this->getArea();
         $statisticData = [];
 
         foreach ($categories as $category) {
-            $info = $this->getInfo($this->appId, $this->statisticsId, $areaCode, $category);
+            $info = $this->getInfo($this->appId, $this->statisticsId, $category);
 
             $statisticData[$info['year'] . '年'][$info['name']] = $info['value'] . $info['unit'];
         }
@@ -40,7 +39,7 @@ class GetDemographics extends GetStatistics
         foreach ($timeCodes as $timeCode) {
             foreach ($categories as $category) {
                 $this->timeCode = $timeCode;
-                $arr = $this->execQuery($this->appId, $this->statisticsId, $areaCode, $category);
+                $arr = $this->execQuery($this->appId, $this->statisticsId, $category);
                 $info = $this->processInfo($arr);
                 $statisticData[$info['year'] . '年'][$info['name']] = $info['value'] . $info['unit'];
             }
@@ -50,6 +49,11 @@ class GetDemographics extends GetStatistics
 
     public function evaluate(): array
     {
+        if ($this->areaCode === 'ZERO_RESULTS') {
+            // 該当住所が見つからない時のエラー処理
+            return ['ZERO_RESULTS'];
+        }
+
         $result = [];
         $changeValue = 0;
         $statisticData = $this->getStatisticData();
