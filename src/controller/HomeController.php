@@ -38,6 +38,10 @@ class HomeController extends Controller
 
     public function analyze(): string|false
     {
+        if (!$this->request->isPost()) {
+            throw new HttpNotFoundException();
+        }
+
         $prefectures = htmlspecialchars($_POST['prefectures'], ENT_QUOTES, 'UTF-8');
         $municipalities = htmlspecialchars($_POST['municipalities'], ENT_QUOTES, 'UTF-8');
         $street = htmlspecialchars($_POST['street'], ENT_QUOTES, 'UTF-8');
