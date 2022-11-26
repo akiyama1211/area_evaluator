@@ -46,7 +46,7 @@ class Application
             '/' => ['controller' => 'home', 'action' => 'index'],
             '/explain' => ['controller' => 'home', 'action' => 'explain'],
             '/inquiry' => ['controller' => 'home', 'action' => 'inquiry'],
-            '/result' => ['controller' => 'analyze', 'action' => 'index'],
+            '/result' => ['controller' => 'home', 'action' => 'analyze'],
         ];
     }
 

@@ -38,11 +38,10 @@ class AnalyzeFinance extends GetStatistics
         // cdCat01='D2214'_実質赤字比率
         // cdCat01='D2215'_連結実質赤字比率
 
-        $areaCode = $this->getArea();
         $statisticData = [];
 
         foreach ($categories as $category) {
-            $info = $this->getInfo($this->appId, $this->statisticsId, $areaCode, $category);
+            $info = $this->getInfo($this->appId, $this->statisticsId, $category);
 
             $categoryName = explode('（', $info['name'])[0];
             $statisticData[$info['year'] . '年'][$categoryName] = $info['value'] . $info['unit'];
@@ -52,6 +51,11 @@ class AnalyzeFinance extends GetStatistics
 
     public function evaluate(): array
     {
+        if ($this->areaCode === 'ZERO_RESULTS') {
+            // 該当住所が見つからない時のエラー処理
+            return ['ZERO_RESULTS'];
+        }
+
         $result['score'] = 0;
         $result['message'] = [];
         $statisticData = $this->getStatisticData();

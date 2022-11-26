@@ -4,13 +4,15 @@ require_once(__DIR__ . '/../lib/readEnv.php');
 
 class GetHazard
 {
-    private string $apiKey;
     private string $area;
+    private string $apiKey;
+    private array $geocoding;
 
     public function __construct(private array $address)
     {
         $this->area = $this->address['prefectures'] . $this->address['municipalities'] . $this->address['street'] . $this->address['extendAddress'];
         $this->apiKey = readEnv()[5];
+        $this->geocoding = $this->getGeocoding();
     }
 
     public function getGeocoding(): array
@@ -20,16 +22,9 @@ class GetHazard
         $geocodeJson = file_get_contents($geocodeApiUrl);
         $geocodeData = json_decode($geocodeJson, true);
 
-        if ($geocodeData['status'] === "ZERO_RESULTS") {
-            $errors['result'] = '該当する住所が存在しないため、解析を終了します。';
-            $prefectures = $this->address['prefectures'];
-            $municipalities = $this->address['municipalities'];
-            $street = $this->address['street'];
-            $extendAddress = $this->address['extendAddress'];
-            $title = 'TOWN SELECT';
-            $content = __DIR__ . '/../views/home.php';
-            include __DIR__ . '/../views/layout.php';
-            exit;
+        // 該当住所が見つからない時のエラー処理
+        if ($geocodeData['status'] === 'ZERO_RESULTS') {
+            return ['ZERO_RESULTS'];
         }
 
         $lon = $geocodeData["results"][0]["geometry"]["location"]["lng"];
@@ -43,8 +38,7 @@ class GetHazard
 
     public function getMaxDepth(): float|int|null
     {
-        $geocoding = $this->getGeocoding();
-        $query = http_build_query($geocoding, '', '&', PHP_QUERY_RFC3986);
+        $query = http_build_query($this->geocoding, '', '&', PHP_QUERY_RFC3986);
         $url = 'https://suiboumap.gsi.go.jp/shinsuimap/Api/Public/GetMaxDepth?' . $query;
 
         $json = file_get_contents($url);
@@ -57,8 +51,7 @@ class GetHazard
 
     public function getBreakPoint(): array
     {
-        $geocoding = $this->getGeocoding();
-        $query = http_build_query($geocoding, '', '&', PHP_QUERY_RFC3986);
+        $query = http_build_query($this->geocoding, '', '&', PHP_QUERY_RFC3986);
         $url = 'https://suiboumap.gsi.go.jp/shinsuimap/Api/Public/GetBreakPoint?' . $query . '&returnparams=EntryRiverName';
 
         $json = file_get_contents($url);
@@ -69,6 +62,12 @@ class GetHazard
 
     public function evaluate(): array
     {
+        // 該当住所が見つからない時のエラー処理
+        if (in_array('ZERO_RESULTS', $this->geocoding) === true) {
+            return ['ZERO_RESULTS'];
+        }
+
+        // 該当住所が見つかった時の処理
         $result = [];
         $result['category'] = '災害';
 
