@@ -2,9 +2,13 @@
 
 class Application
 {
+    protected $router;
+    protected $response;
+
     public function __construct()
     {
         $this->router = new Router($this->registerRoutes());
+        $this->response = new Response();
     }
 
     public function run()
@@ -20,6 +24,8 @@ class Application
         } catch (HttpNotFoundException) {
             $this->render404Page();
         }
+
+        $this->response->send();
     }
 
     private function runAction($controllerName, $action)
@@ -28,8 +34,10 @@ class Application
         if (!class_exists($controllerClass)) {
             throw new HttpNotFoundException();
         }
+
         $controller = new $controllerClass();
-        $controller->run($action);
+        $content = $controller->run($action);
+        $this->response->setContent($content);
     }
 
     private function registerRoutes()
@@ -49,20 +57,21 @@ class Application
 
     private function render404Page()
     {
-        header('HTTP/1.1 404 Page Not Found');
-        $content = <<<EOT
-        <!DOCTYPE html>
-        <html>
-            <head>
-                <meta charset="utf-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1">
-                <title>404 </title>
-            </head>
-            <body>
-                <h1>404 Page Not Found.</h1>
-            </body>
-        </html>
-    EOT;
-        echo $content;
+        $this->response->setStatusCode(404, 'Not Found');
+        $this->response->setContent(
+            <<<EOT
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>404 </title>
+    </head>
+    <body>
+        <h1>404 Page Not Found.</h1>
+    </body>
+</html>
+EOT
+        );
     }
 }

@@ -6,31 +6,33 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $errors = [];
-
-        $prefectures = '';
-        $municipalities = '';
-        $street = '';
-        $extendAddress = '';
-        $title = 'TOWN SELECT';
-        $content = __DIR__ . '/../views/home.php';
-
-        include __DIR__ . '/../views/layout.php';
+        return $this->render(
+            [
+                'errors' => [],
+                'prefectures' => '',
+                'municipalities' => '',
+                'street' => '',
+                'extendAddress' => '',
+                'title' => 'トップページ',
+            ]
+        );
     }
 
     public function explain()
     {
-        $title = 'TOWN SELECT 概要';
-        $content = __DIR__ . '/../views/explain.php';
-
-        include __DIR__ . '/../views/layout.php';
+        return $this->render(
+            [
+                'title' => '概要',
+            ]
+        );
     }
 
     public function inquiry()
     {
-        $title = 'TOWN SELECT お問い合わせ';
-        $content = __DIR__ . '/../views/inquiry.php';
-
-        include __DIR__ . '/../views/layout.php';
+        return $this->render(
+            [
+                'title' => 'お問い合わせ',
+            ]
+        );
     }
 }
