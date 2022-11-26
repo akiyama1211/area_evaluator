@@ -3,6 +3,12 @@
 class Controller
 {
     protected $actionName;
+    protected $request;
+
+    public function __construct($application)
+    {
+        $this->request = $application->request;
+    }
 
     public function run($action): mixed
     {

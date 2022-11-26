@@ -2,19 +2,22 @@
 
 class Application
 {
+    public $request;
+
     protected $router;
     protected $response;
 
     public function __construct()
     {
+        $this->request = new Request();
         $this->router = new Router($this->registerRoutes());
         $this->response = new Response();
     }
 
-    public function run()
+    public function run(): void
     {
         try {
-            $params = $this->router->resolve($this->getPathInfo());
+            $params = $this->router->resolve($this->request->getPathInfo());
             if (!$params) {
                 throw new HttpNotFoundException();
             }
@@ -28,19 +31,19 @@ class Application
         $this->response->send();
     }
 
-    private function runAction($controllerName, $action)
+    private function runAction($controllerName, $action): void
     {
         $controllerClass = ucfirst($controllerName) . 'Controller';
         if (!class_exists($controllerClass)) {
             throw new HttpNotFoundException();
         }
 
-        $controller = new $controllerClass();
+        $controller = new $controllerClass($this);
         $content = $controller->run($action);
         $this->response->setContent($content);
     }
 
-    private function registerRoutes()
+    private function registerRoutes(): array
     {
         return [
             '/' => ['controller' => 'home', 'action' => 'index'],
@@ -50,12 +53,7 @@ class Application
         ];
     }
 
-    private function getPathInfo()
-    {
-        return $_SERVER['REQUEST_URI'];
-    }
-
-    private function render404Page()
+    private function render404Page(): void
     {
         $this->response->setStatusCode(404, 'Not Found');
         $this->response->setContent(
