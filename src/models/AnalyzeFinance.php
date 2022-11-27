@@ -51,8 +51,8 @@ class AnalyzeFinance extends GetStatistics
 
     public function evaluate(): array
     {
+        // 該当住所が見つからない時のエラー処理
         if ($this->areaCode === 'ZERO_RESULTS') {
-            // 該当住所が見つからない時のエラー処理
             return ['ZERO_RESULTS'];
         }
 
