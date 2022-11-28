@@ -66,10 +66,10 @@ class GetDemographics extends GetStatistics
 
         if ($changeValue > 0) {
             $result['score'] = 2;
-            $result['message'][] = $this->area . 'の過去３年間の人口の増減値は' . $changeValue . '人であり、増加傾向にあります。' . PHP_EOL;
+            $result['message'][] = '「' . $this->area . '」の過去３年間の人口の増減値は' . $changeValue . '人であり、増加傾向にあります。' . PHP_EOL;
         } else {
             $result['score'] = 1;
-            $result['message'][] = $this->area . 'の過去３年間の人口の増減値は' . $changeValue . '人であり、減少傾向にあります。' . PHP_EOL;
+            $result['message'][] = '「' . $this->area . '」の過去３年間の人口の増減値は' . $changeValue . '人であり、減少傾向にあります。' . PHP_EOL;
         }
         return $result;
     }

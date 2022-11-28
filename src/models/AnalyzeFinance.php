@@ -64,37 +64,37 @@ class AnalyzeFinance extends GetStatistics
                 $result['score'] += 0.5;
             } elseif ((int)$arr['実質公債費比率'] < 35) {
                 $result['score'] += 0.25;
-                $result['message'][] = $this->area . 'の実質公債費比率が早期健全化基準を超えています。';
+                $result['message'][] =  '「' . $this->area . '」の実質公債費比率が早期健全化基準を超えています。';
             } else {
                 $result['score'] += 0;
-                $result['message'][] = $this->area . 'の実質公債費比率が財政再生基準を超えています。';
+                $result['message'][] =  '「' . $this->area . '」の実質公債費比率が財政再生基準を超えています。';
             }
 
             if ((int)$arr['将来負担比率'] < 350) {
                 $result['score'] += 0.5;
             } else {
                 $result['score'] += 0;
-                $result['message'][] = $this->area . 'の将来負担比率が早期健全化基準を超えています。';
+                $result['message'][] =  '「' . $this->area . '」の将来負担比率が早期健全化基準を超えています。';
             }
 
             if ((int)$arr['実質赤字比率'] < 11.25) {
                 $result['score'] += 0.5;
             } elseif ((int)$arr['実質赤字比率'] < 20) {
                 $result['score'] += 0.25;
-                $result['message'][] = $this->area . 'の実質赤字比率が早期健全化基準を超えています。';
+                $result['message'][] =  '「' . $this->area . '」の実質赤字比率が早期健全化基準を超えています。';
             } else {
                 $result['score'] += 0;
-                $result['message'][] = $this->area . 'の実質赤字比率が財政再生基準を超えています。';
+                $result['message'][] =  '「' . $this->area . '」の実質赤字比率が財政再生基準を超えています。';
             }
 
             if ((int)$arr['連結実質赤字比率'] < 16.25) {
                 $result['score'] += 0.5;
             } elseif ((int)$arr['連結実質赤字比率'] < 30) {
                 $result['score'] += 0.25;
-                $result['message'][] = $this->area . 'の連結実質赤字比率が早期健全化基準を超えています。';
+                $result['message'][] =  '「' . $this->area . '」の連結実質赤字比率が早期健全化基準を超えています。';
             } else {
                 $result['score'] += 0;
-                $result['message'][] = $this->area . 'の連結実質赤字比率が財政再生基準を超えています。';
+                $result['message'][] =  '「' . $this->area . '」の連結実質赤字比率が財政再生基準を超えています。';
             }
             foreach ($arr as $category => $value) {
                 $statisticData['早期健全化基準'][$category] = self::STANDARD['早期健全化基準'][$category];
@@ -105,7 +105,7 @@ class AnalyzeFinance extends GetStatistics
         $result['statisticData'] = $statisticData;
         $result['category'] = '財政';
         if (!count($result['message'])) {
-            $result['message'][] = $this->area . 'の財政状態について、健全化判断比率に該当する指標はありません。';
+            $result['message'][] =  '「' . $this->area . '」の財政状態について、健全化判断比率に該当する指標はありません。';
         }
         return $result;
     }

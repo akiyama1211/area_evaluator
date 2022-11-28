@@ -1,3 +1,5 @@
+<?php $toolTip = ['実質公債費比率' => '地方公共団体の借入金（地方債）の返済額（公債費）の大きさ', '将来負担比率' => '地方公共団体の借入金（地方債）など現在抱えている負債の大きさ', '実質赤字比率' => '地方公共団体の最も主要な会計である「一般会計」等に生じている赤字の大きさ', '連結実質赤字比率' => '公立病院や下水道など公営企業を含む「地方公共団体の全会計」に生じている赤字の大きさ']?>
+
 <div class="container">
   <h2 class="text-center my-4">「<?php echo implode($address) ?>」の解析結果は…</h2>
   <div class="mb-5 border border-dark pr-4">
@@ -73,12 +75,19 @@
                   <th></th>
                   <?php foreach ($result['statisticData'] as $year => $arr) :?>
                     <?php foreach ($arr as $category => $value) :?>
-                      <th><?php echo $category?></th>
-                      <?php endforeach?>
+                      <?php if (in_array($category, ['実質公債費比率', '将来負担比率', '実質赤字比率', '連結実質赤字比率'])):?>
+                        <th class="tip">
+                          <span class="tip-text"><?php echo $toolTip[$category]?></span>
+                          <?php echo $category?><img class="question" src="https://free-icons.net/wp-content/uploads/2021/02/symbol068.png">
+                        </th>
+                      <?php else: ?>
+                        <th><?php echo $category?></th>
+                      <?php endif?>
+                    <?php endforeach?>
                       <?php break?>
-                      <?php endforeach?>
-                    </tr>
-                  </thead>
+                  <?php endforeach?>
+                </tr>
+              </thead>
           <?php if ($result['category'] <> '医療') :?>
               <tbody>
                 <?php foreach ($result['statisticData'] as $year => $arr) :?>
