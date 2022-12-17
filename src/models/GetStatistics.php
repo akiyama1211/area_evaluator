@@ -56,7 +56,7 @@ abstract class GetStatistics
 
         $areaKey = array_search($this->area, array_column($areaMetaData, '@name'));
 
-        if (!$areaKey) {
+        if ($areaKey === false) {
             // 該当住所が見つからない時のエラー処理
             return 'ZERO_RESULTS';
         }

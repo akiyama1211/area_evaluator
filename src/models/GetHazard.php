@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . '/../lib/readEnv.php');
+require_once(__DIR__ . '/../lib/existUrl.php');
 
 class GetHazard
 {
@@ -49,15 +50,18 @@ class GetHazard
         return $maxDepthInfo['Depth'];
     }
 
-    public function getBreakPoint(): array
+    public function getBreakPoint(): array|bool
     {
         $query = http_build_query($this->geocoding, '', '&', PHP_QUERY_RFC3986);
         $url = 'https://suiboumap.gsi.go.jp/shinsuimap/Api/Public/GetBreakPoint?' . $query . '&returnparams=EntryRiverName';
 
-        $json = file_get_contents($url);
-        $arr = json_decode($json, true);
-        $breakPoint = array_unique(array_column($arr, 'EntryRiverName'));
-        return $breakPoint;
+        if (existUrl($url)) {
+            $json = file_get_contents($url);
+            $arr = json_decode($json, true);
+            $breakPoint = array_unique(array_column($arr, 'EntryRiverName'));
+            return $breakPoint;
+        }
+        return false;
     }
 
     public function evaluate(): array
@@ -88,14 +92,14 @@ class GetHazard
             $breakPoint = $this->getBreakPoint();
             $result['statisticsData']['breakPoint'] = $breakPoint;
             $result['score'] = 1;
-            $result['message'][] = 'この地域は浸水想定区域です。この地点の洪水時の想定最大侵水深は' . $maxDepth . 'mです。破堤点となる可能性のある川は' . implode('、', $breakPoint) . 'です。';
+
+            if ($breakPoint === false) {
+                $result['message'][] = 'この地域は浸水想定区域です。この地点の洪水時の想定最大侵水深は' . $maxDepth . 'mです。';
+            } else {
+                $result['message'][] = 'この地域は浸水想定区域です。この地点の洪水時の想定最大侵水深は' . $maxDepth . 'mです。破堤点となる可能性のある川は' . implode('、', $breakPoint) . 'です。';
+            }
+
         }
         return $result;
     }
-    //sample
-    // https://suiboumap.gsi.go.jp/shinsuimap/Api/Public/GetMaxDepth?lon=132.825909&lat=35.41577515775&grouptype=0
-    // →float(1.279)
-
-    // 〒3060215
-    // 番地3956
 }

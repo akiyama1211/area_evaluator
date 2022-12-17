@@ -64,6 +64,19 @@ class HomeController extends Controller
         if (count($errors) === 0) {
             // 必須項目が入力されている場合の処理
 
+            $irregularMunicipalities = ['札幌市', '仙台市', 'さいたま市', '千葉市', '横浜市', '川崎市', '相模原市', '新潟市', '静岡市', '浜松市', '名古屋市', '京都市', '大阪市', '堺市', '神戸市', '岡山市', '広島市', '北九州市', '福岡市', '熊本市'];
+
+            foreach ($irregularMunicipalities as $name) {
+                if(strpos($municipalities, $name) !== false){
+                    $frontMunicipalities = mb_substr($municipalities, 0, mb_strpos($municipalities, '市') + 1, 'UTF-8');
+                    $behindMUnicipalities = explode('市', $municipalities)[1];
+
+                    $municipalities = $frontMunicipalities;
+                    $street = $behindMUnicipalities . $street;
+                    break;
+                }
+            }
+
             $address = [
                 'prefectures' => $prefectures,
                 'municipalities' => $municipalities,
