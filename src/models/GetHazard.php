@@ -89,16 +89,8 @@ class GetHazard
             $result['score'] = 2;
             $result['message'][] = 'この地域は浸水が想定されていない区域であるため、水害の可能性は低いです。まだシミュレーションデータが登録されていないだけの可能性もあるため、詳細は自治体のハザードマップをご確認ください。';
         } else {
-            $breakPoint = $this->getBreakPoint();
-            $result['statisticsData']['breakPoint'] = $breakPoint;
             $result['score'] = 1;
-
-            if ($breakPoint === false) {
-                $result['message'][] = 'この地域は浸水想定区域です。この地点の洪水時の想定最大侵水深は' . $maxDepth . 'mです。';
-            } else {
-                $result['message'][] = 'この地域は浸水想定区域です。この地点の洪水時の想定最大侵水深は' . $maxDepth . 'mです。破堤点となる可能性のある川は' . implode('、', $breakPoint) . 'です。';
-            }
-
+            $result['message'][] = 'この地域は浸水想定区域です。この地点の洪水時の想定最大侵水深は' . $maxDepth . 'mです。';
         }
         return $result;
     }
