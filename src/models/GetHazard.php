@@ -43,7 +43,7 @@ class GetHazard
 
         $json = file_get_contents($url);
         $maxDepthInfo = json_decode($json, true);
-        if ($maxDepthInfo === null) {
+        if ($maxDepthInfo === []) {
             return null;
         }
         return $maxDepthInfo['Depth'];
